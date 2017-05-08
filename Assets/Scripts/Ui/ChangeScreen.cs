@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class ChangeScreen : MonoBehaviour {
 
-    public Sprite[] buttonsSprites;
+    public static Sprite[] buttonsSprites;
 
-    private Button[] buttons;
+    private static Button[] buttons;
 
-    void Awake()
+    public static void SetButtons()
     {
         buttons = UiMainController.instance.buttons;
+        buttonsSprites = UiMainController.instance.buttonsSprites;
         buttons[0].image.overrideSprite = buttonsSprites[0];
         buttons[2].image.overrideSprite = buttonsSprites[2];
     }

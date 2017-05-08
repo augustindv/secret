@@ -2,6 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Linq;
+
+public struct Auction
+{
+    public NetworkInstanceId netIDPlayer;
+    public int bid;
+    public int auctionLineIndex;
+}
+
+public class SyncListAuction : SyncListStruct<Auction> { }
 
 public class AuctionData : NetworkBehaviour {
 
@@ -26,5 +36,14 @@ public class AuctionData : NetworkBehaviour {
 
     [SyncVar]
     public SyncListCheck checksIDToPublish = new SyncListCheck();
+    [SyncVar]
+    public SyncListInt bidsOnAuction = new SyncListInt();
+
+    [Command]
+    public void CmdResetAuctionData()
+    {
+        checksIDToPublish.Clear();
+        bidsOnAuction.Clear();
+    }
 
 }

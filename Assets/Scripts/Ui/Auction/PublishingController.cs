@@ -30,9 +30,7 @@ public class PublishingController : MonoBehaviour {
     private static string PUBLISH_NOTHING = "Vous ne publier rien";
 
     public GameObject secretPopupPublishing;
-    public GameObject inventoryLinePrefab;
     public GameObject inventorySecretPrefab;
-    public GameObject inventorySecretEmptyPrefab;
     public GameObject publishingContent;
     public Button publishNothing;
     public GameObject choiceMadePanel;
@@ -40,64 +38,78 @@ public class PublishingController : MonoBehaviour {
 
     private bool choiceMade;
 
+    public Button nothingPublishedButton;
+
     public void Start()
     {
         publishNothing.onClick.AddListener(delegate {
             choiceMade = !choiceMade;
             if (choiceMade)
             {
-                //UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
-                UiMainController.instance.localPlayer.checkToPublish = new Check(null, null, null);
+                UiMainController.instance.localPlayer.checkToPublish = new Check(null, null, null, false, 0);
+                UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
                 ChoiceMade(new Check(), false);
             }
         });
+
+        nothingPublishedButton.onClick.AddListener(delegate
+        {
+            UiMainController.instance.localPlayer.CmdSetNextPhase(GamePhase.DiscussionBeforeDecision);
+        });
+    }
+
+    public void ResetUiPublishing()
+    {
+        Color playerColor = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
+        publishNothing.transform.FindChild("BtPublishBorder").GetComponent<Image>().color = playerColor;
+        secretPopupPublishing.transform.FindChild("PublishSecretButton").FindChild("BtPublishBorder").GetComponent<Image>().color = playerColor;
+        secretPopupPublishing.transform.FindChild("PopUpBorder").GetComponent<Image>().color = playerColor;
+        scrollSecretsToPublish.SetActive(true);
+        secretPopupPublishing.SetActive(false);
+        publishNothing.gameObject.SetActive(true);
+        choiceMadePanel.SetActive(false);
+        choiceMade = false;
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in publishingContent.transform) children.Add(child.gameObject);
+        children.ForEach(child => Destroy(child));
     }
 
     public void UpdatePublishingPanel(Player p)
     {
-        // Attention : only unpublished
         List<Check> checks = p.checks;
-        List<Check> tmpChecks = checks.FindAll(c => !c.secret.published);
-
-        bool evenNbSecrets = tmpChecks.Count % 2 == 0;
-        int numberOfLines = evenNbSecrets ? tmpChecks.Count / 2 : (tmpChecks.Count / 2) + 1;
-        int addedNb = 0;
+        List<Check> tmpChecks = checks.FindAll(c => !c.published);
 
         foreach (Check check in tmpChecks)
         {
             Secret s = check.secret;
-            Player playerOwner = check.playerTargeted;
 
-            GameObject line = null;
-            if (addedNb % 2 == 0)
-            {
-                line = Instantiate(inventoryLinePrefab, publishingContent.transform);
-            }
-            else
-            {
-                line = publishingContent.transform.GetChild(publishingContent.transform.childCount - 1).gameObject;
-            }
-
-            GameObject inventorySecret = Instantiate(inventorySecretPrefab, line.transform);
-            GameObject inventorySecretEmpty = null;
-
-            if (addedNb == (tmpChecks.Count-1) && !evenNbSecrets)
-            {
-                inventorySecretEmpty = Instantiate(inventorySecretEmptyPrefab, line.transform);
-                inventorySecretEmpty.GetComponent<Image>().color = new Color(255, 255, 255, 0);
-                inventorySecretEmpty.transform.localScale = new Vector3(1, 1, 1);
-            }
-
+            GameObject inventorySecret = Instantiate(inventorySecretPrefab, publishingContent.transform);
             inventorySecret.transform.localScale = new Vector3(1, 1, 1);
-            line.transform.localScale = new Vector3(1, 1, 1);
-
-            Sprite sprite = PlayerDatabase.instance.GetSprite(check.playerTargeted.playerName);
-            inventorySecret.transform.FindChild("Holder").GetComponent<Image>().sprite = sprite;
-            Texture2D texture = Resources.Load("Secrets/Icons/icon-" + check.secret.imageID) as Texture2D;
-            inventorySecret.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            inventorySecret.transform.FindChild("SecretBg").GetComponent<Image>().color = new Color(24f / 255f, 26f / 255f, 32f / 255f, 1f);
+            inventorySecret.transform.FindChild("SecretBorder").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
+            Sprite spriteIcon = s.spriteIcon;
+            Texture2D texture = null;
+            if (spriteIcon == null)
+            {
+                texture = Resources.Load("Secrets/Icons/icon-" + check.secret.secretID) as Texture2D;
+                spriteIcon = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                check.secret.spriteIcon = spriteIcon;
+            }
+            Transform secretIcon = inventorySecret.transform.FindChild("Image");
+            GameObject color = secretIcon.FindChild("Color").gameObject;
+            GameObject icon = secretIcon.FindChild("Icon").gameObject;
+            GameObject chest = secretIcon.FindChild("Chest").gameObject;
+            GameObject holder = secretIcon.FindChild("Holder").gameObject;
+            icon.GetComponent<Image>().sprite = spriteIcon;
+            texture = Resources.Load("Secrets/Colors/color-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+            color.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            texture = Resources.Load("Secrets/Chests/chest-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+            chest.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(p.playerName);
+            inventorySecret.transform.FindChild("TextSecret").GetComponent<Text>().text = "<b>" + check.playerTargeted.playerName + "</b> " + s.secretTextCommon;
+            inventorySecret.transform.FindChild("SecretNumber").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
+            inventorySecret.transform.FindChild("SecretNumber").FindChild("Text").GetComponent<Text>().text = check.cardID + "";
             inventorySecret.GetComponent<Button>().onClick.AddListener(delegate { if (!choiceMade) OpenSecretPopupPublishing(check); });
-
-            addedNb++;
         }
 
     }
@@ -105,9 +117,27 @@ public class PublishingController : MonoBehaviour {
     public void OpenSecretPopupPublishing(Check check)
     {
         publishNothing.gameObject.SetActive(false);
-        Texture2D texture = Resources.Load("Secrets/Icons/icon-" + check.secret.imageID) as Texture2D;
-        secretPopupPublishing.transform.FindChild("SecretIcon").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        secretPopupPublishing.transform.FindChild("SecretText").GetComponent<Text>().text = check.playerTargeted.playerName + " " + check.secret.secretText;
+        Texture2D texture = null;
+        Sprite spriteIcon = check.secret.spriteIcon;
+        if (spriteIcon == null)
+        {
+            texture = Resources.Load("Secrets/Icons/icon-" + check.secret.secretID) as Texture2D;
+            spriteIcon = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            check.secret.spriteIcon = spriteIcon;
+        }
+        Transform secretIcon = secretPopupPublishing.transform.FindChild("SecretIcon");
+        GameObject color = secretIcon.FindChild("Color").gameObject;
+        GameObject icon = secretIcon.FindChild("Icon").gameObject;
+        GameObject chest = secretIcon.FindChild("Chest").gameObject;
+        GameObject holder = secretIcon.FindChild("Holder").gameObject;
+        Player p = PlayerDatabase.instance.GetPlayer(check.playerTargeted.playerName);
+        icon.GetComponent<Image>().sprite = spriteIcon;
+        texture = Resources.Load("Secrets/Colors/color-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+        color.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        texture = Resources.Load("Secrets/Chests/chest-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+        chest.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(p.playerName);
+        secretPopupPublishing.transform.FindChild("SecretText").GetComponent<Text>().text = check.playerTargeted.playerName + " " + check.secret.secretTextCommon;
         secretPopupPublishing.transform.FindChild("CloseButton").GetComponent<Button>().onClick.RemoveAllListeners();
         secretPopupPublishing.transform.FindChild("CloseButton").GetComponent<Button>().onClick.AddListener(delegate {
             if (!choiceMade)
@@ -122,7 +152,10 @@ public class PublishingController : MonoBehaviour {
             if (choiceMade)
             {
                 // Add the secret to the auctions !
-                UiMainController.instance.localPlayer.checkToPublish = check;
+                Player localPlayer = UiMainController.instance.localPlayer;
+                localPlayer.checkToPublish = check;
+                CheckID checkIDToPublish = localPlayer.checksID.ToList().Find(c => check.secret.netId.Equals(c.secret));
+                localPlayer.CmdAddCheckToPublish(checkIDToPublish);
                 UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
                 ChoiceMade(check, true);
             }
@@ -139,9 +172,29 @@ public class PublishingController : MonoBehaviour {
         GameObject secretChosen = choiceMadePanel.transform.FindChild("SecretChosen").gameObject;
         if (publishingSomething)
         {
-            Texture2D texture = Resources.Load("Secrets/Icons/icon-" + check.secret.imageID) as Texture2D;
-            secretChosen.transform.FindChild("SecretIcon").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            secretChosen.transform.FindChild("SecretText").GetComponent<Text>().text = check.playerTargeted.playerName + " " + check.secret.secretText;
+            Sprite spriteIcon = check.secret.spriteIcon;
+            Texture2D texture = null;
+            if (spriteIcon == null)
+            {
+                texture = Resources.Load("Secrets/Icons/icon-" + check.secret.secretID) as Texture2D;
+                spriteIcon = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                check.secret.spriteIcon = spriteIcon;
+            }
+            Transform secretIcon = secretChosen.transform.FindChild("SecretIcon");
+            GameObject color = secretIcon.FindChild("Color").gameObject;
+            GameObject icon = secretIcon.FindChild("Icon").gameObject;
+            GameObject chest = secretIcon.FindChild("Chest").gameObject;
+            GameObject holder = secretIcon.FindChild("Holder").gameObject;
+            Player p = PlayerDatabase.instance.GetPlayer(check.playerTargeted.playerName);
+            icon.GetComponent<Image>().sprite = spriteIcon;
+            texture = Resources.Load("Secrets/Colors/color-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+            color.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            texture = Resources.Load("Secrets/Chests/chest-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
+            chest.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(p.playerName);
+            secretChosen.transform.FindChild("SecretText").GetComponent<Text>().text = check.playerTargeted.playerName + " " + check.secret.secretTextCommon;
+            secretChosen.transform.FindChild("PopUpBg").GetComponent<Image>().color = new Color(24f / 255f, 26f / 255f, 32f / 255f, 1f);
+            secretChosen.transform.FindChild("PopUpBorder").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
         } else
         {
             secretChosen.SetActive(false);

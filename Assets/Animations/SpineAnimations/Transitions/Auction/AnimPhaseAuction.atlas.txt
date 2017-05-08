@@ -1,0 +1,209 @@
+
+AnimPhaseAuction.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+C
+  rotate: true
+  xy: 839, 340
+  size: 48, 60
+  orig: 48, 60
+  offset: 0, 0
+  index: -1
+E1
+  rotate: true
+  xy: 889, 552
+  size: 43, 62
+  orig: 43, 62
+  offset: 0, 0
+  index: -1
+E3
+  rotate: true
+  xy: 889, 552
+  size: 43, 62
+  orig: 43, 62
+  offset: 0, 0
+  index: -1
+E2
+  rotate: true
+  xy: 746, 317
+  size: 43, 88
+  orig: 43, 88
+  offset: 0, 0
+  index: -1
+H
+  rotate: false
+  xy: 839, 390
+  size: 49, 62
+  orig: 49, 62
+  offset: 0, 0
+  index: -1
+N
+  rotate: false
+  xy: 886, 488
+  size: 51, 62
+  orig: 51, 62
+  offset: 0, 0
+  index: -1
+R
+  rotate: true
+  xy: 836, 291
+  size: 47, 60
+  orig: 47, 60
+  offset: 0, 0
+  index: -1
+S
+  rotate: false
+  xy: 970, 709
+  size: 45, 60
+  orig: 45, 60
+  offset: 0, 0
+  index: -1
+deco01
+  rotate: false
+  xy: 713, 435
+  size: 19, 17
+  orig: 19, 17
+  offset: 0, 0
+  index: -1
+deco02
+  rotate: false
+  xy: 456, 306
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+deco04
+  rotate: false
+  xy: 2, 2
+  size: 15, 22
+  orig: 15, 22
+  offset: 0, 0
+  index: -1
+deco05
+  rotate: true
+  xy: 985, 1004
+  size: 16, 37
+  orig: 16, 37
+  offset: 0, 0
+  index: -1
+fond-vagues
+  rotate: false
+  xy: 2, 571
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+mainB1
+  rotate: false
+  xy: 655, 580
+  size: 58, 170
+  orig: 58, 170
+  offset: 0, 0
+  index: -1
+mainB2
+  rotate: true
+  xy: 713, 503
+  size: 47, 171
+  orig: 47, 171
+  offset: 0, 0
+  index: -1
+mainB3
+  rotate: false
+  xy: 917, 597
+  size: 51, 172
+  orig: 51, 172
+  offset: 0, 0
+  index: -1
+mainH1
+  rotate: false
+  xy: 653, 408
+  size: 58, 170
+  orig: 58, 170
+  offset: 0, 0
+  index: -1
+mainH2
+  rotate: true
+  xy: 713, 454
+  size: 47, 171
+  orig: 47, 171
+  offset: 0, 0
+  index: -1
+mainH3
+  rotate: true
+  xy: 715, 552
+  size: 51, 172
+  orig: 51, 172
+  offset: 0, 0
+  index: -1
+marteauBD
+  rotate: true
+  xy: 2, 26
+  size: 273, 249
+  orig: 273, 249
+  offset: 0, 0
+  index: -1
+marteauBG
+  rotate: false
+  xy: 2, 301
+  size: 255, 268
+  orig: 255, 268
+  offset: 0, 0
+  index: -1
+marteauHD
+  rotate: false
+  xy: 453, 752
+  size: 255, 268
+  orig: 255, 268
+  offset: 0, 0
+  index: -1
+marteauHG
+  rotate: false
+  xy: 710, 771
+  size: 273, 249
+  orig: 273, 249
+  offset: 0, 0
+  index: -1
+oeilB
+  rotate: false
+  xy: 653, 316
+  size: 91, 90
+  orig: 91, 90
+  offset: 0, 0
+  index: -1
+oeilH
+  rotate: false
+  xy: 746, 362
+  size: 91, 90
+  orig: 91, 90
+  offset: 0, 0
+  index: -1
+perruque
+  rotate: false
+  xy: 259, 305
+  size: 195, 264
+  orig: 195, 264
+  offset: 0, 0
+  index: -1
+perruqueB
+  rotate: false
+  xy: 456, 320
+  size: 195, 264
+  orig: 195, 264
+  offset: 0, 0
+  index: -1
+pupitreB
+  rotate: true
+  xy: 453, 586
+  size: 164, 200
+  orig: 164, 200
+  offset: 0, 0
+  index: -1
+pupitreH
+  rotate: true
+  xy: 715, 605
+  size: 164, 200
+  orig: 164, 200
+  offset: 0, 0
+  index: -1

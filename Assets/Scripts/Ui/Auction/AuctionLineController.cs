@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using System.Linq;
 
 [System.Serializable]
 public class ChangeMoneyBidEvent : UnityEvent<int>
@@ -16,9 +17,8 @@ public class ChangeProgressBarEvent : UnityEvent<float>
 
 public class AuctionLineController : MonoBehaviour {
 
-    public static int MAX_PROGRESS_BAR_WIDTH = 700;
+    public static float MAX_PROGRESS_BAR_WIDTH = 800f;
 
-    public int moneyBid = 0;
     public int index;
 
     public static AuctionLineController auctionLineController;
@@ -48,6 +48,8 @@ public class AuctionLineController : MonoBehaviour {
     public delegate void ChangeProgressBar(float newWidth);
     public event ChangeProgressBar ProgressBarChanged;
 
+    public int moneyBidByLocalPlayer = 0;
+
     public void MoneyBidHasChanged(int newMoney, float newWidth)
     {
         if (MoneyChanged != null)
@@ -65,16 +67,18 @@ public class AuctionLineController : MonoBehaviour {
     {
         MoneyController.instance.MoneyHasChanged(UiMainController.instance.localPlayer.playerMoney);
         buttonToBid.onClick.AddListener(ClickToBid);
-        MoneyBidHasChanged(moneyBid, 0);
+        MoneyBidHasChanged(0, 0);
     }
 
     void ClickToBid()
     {
-        if (UiMainController.instance.localPlayer.playerMoney != 0)
+        Player localPlayer = UiMainController.instance.localPlayer;
+        if ((localPlayer.playerMoney - AuctionController.instance.moneyBidTotal) != 0)
         {
-            UiMainController.instance.localPlayer.CmdUpdateBidOnAuction(index);
-            UiMainController.instance.localPlayer.playerMoney--;
-            MoneyController.instance.MoneyHasChanged(UiMainController.instance.localPlayer.playerMoney);
+            localPlayer.CmdUpdateBidOnAuction(index);
+            moneyBidByLocalPlayer++;
+            AuctionController.instance.moneyBidTotal++;
+            MoneyController.instance.MoneyHasChanged(localPlayer.playerMoney - AuctionController.instance.moneyBidTotal);
         }
     }
 

@@ -7,10 +7,19 @@ public class Selfie : MonoBehaviour
 {
     WebCamTexture webCamTexture;
     public static int size = 256;
+    public Quaternion baseRotation;
 
     void Start()
     {
-        webCamTexture = new WebCamTexture();
+        WebCamDevice frontWebcam = WebCamTexture.devices[0];
+        foreach(WebCamDevice device in WebCamTexture.devices)
+        {
+            if (device.isFrontFacing)
+                frontWebcam = device;
+        }
+
+        webCamTexture = new WebCamTexture(frontWebcam.name, 256, 256);
+        baseRotation = transform.rotation;
         gameObject.GetComponent<Image>().material.mainTexture = webCamTexture;
         webCamTexture.Play();
     }
@@ -33,7 +42,15 @@ public class Selfie : MonoBehaviour
         photo.Apply();
         TextureScale.Bilinear(photo, size, size);
 
-        
+        Debug.Log(webCamTexture.videoRotationAngle);
+        // TODO something more generic ...
+        if (webCamTexture.videoRotationAngle > 0)
+        {
+            Color32[] pixels = photo.GetPixels32();
+            pixels = Rotate90(pixels, photo.width, 0);
+            photo.SetPixels32(pixels);
+        }
+
         //Encode to a PNG
         byte[] bytes = photo.EncodeToJPG();
         webCamTexture.Stop();
@@ -46,5 +63,27 @@ public class Selfie : MonoBehaviour
     public void Snap(Player.PictureReady cb)
     {
         StartCoroutine(TakePhoto(cb));
+    }
+
+    static Color32[] Rotate90(Color32[] matrix, int n, int angle)
+    {
+        Color32[] ret = new Color32[n * n];
+
+        for (int x = 0; x < n; ++x)
+        {
+            for (int y = 0; y < n; ++y)
+            {
+                ret[x * n + y] = matrix[(n - y - 1) * n + x];
+            }
+        }
+
+        return ret;
+    }
+
+    void Update()
+    {
+        float scaleY = webCamTexture.videoVerticallyMirrored ? 1.0f : -1.0f;
+        transform.localScale = new Vector3(1, scaleY, 0.0f);
+        transform.rotation = baseRotation * Quaternion.AngleAxis(webCamTexture.videoRotationAngle, Vector3.back);
     }
 }

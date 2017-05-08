@@ -3,10 +3,10 @@ using UnityEngine.Networking;
 
 public class Bank : NetworkBehaviour {
 
+    [SyncVar (hook = "onChangeBank")]
+    public int bankMoney = 0;
     [SyncVar]
-    public int bankMoney = 10;
-    [SyncVar]
-    public int totalMoneyInGame = 10;
+    public float totalMoneyInGame = 70f;
 
     public static Bank bank;
     public static Bank instance
@@ -25,6 +25,11 @@ public class Bank : NetworkBehaviour {
 
             return bank;
         }
+    }
+
+    void onChangeBank(int value)
+    {
+        BankController.instance.BankHasChanged(value);    
     }
 
     // Use this for initialization

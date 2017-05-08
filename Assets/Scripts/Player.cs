@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public struct ServerSelfie
 {
@@ -23,6 +24,8 @@ public class Player : CaptainsMessPlayer {
     [SyncVar]
     public int playerMoney = 10;
     [SyncVar]
+    public int playerMoneyExtra = 0;
+    [SyncVar]
     public int cardDeck;
     [SyncVar]
     public Structures.SyncListNetworkInstanceId cards = new Structures.SyncListNetworkInstanceId();
@@ -33,6 +36,7 @@ public class Player : CaptainsMessPlayer {
 
     public List<Check> checks = new List<Check>();
     public Check checkToPublish;
+    public GamePhase gamePhase = GamePhase.Personnalisation;
 
     // VVVVVVVVVV
     private Selfie selfie;
@@ -80,7 +84,7 @@ public class Player : CaptainsMessPlayer {
     } */
 
     [Command]
-    void CmdChangeMoneyPlayer(int newMoney)
+    public void CmdChangeMoneyPlayer(int newMoney)
     {
         this.playerMoney = newMoney;
         // Obliged to do this to trigger event ?
@@ -88,7 +92,7 @@ public class Player : CaptainsMessPlayer {
     }
 
     [ClientRpc]
-    void RpcChangeMoneyPlayer(int newMoney)
+    public void RpcChangeMoneyPlayer(int newMoney)
     {
         if (isLocalPlayer)
         {
@@ -124,11 +128,18 @@ public class Player : CaptainsMessPlayer {
     [ClientRpc]
     public void RpcOnStartedGame()
     {
-        StartGameController.instance.SetActiveUIStartGame(false);
+        if (isLocalPlayer)
+        {
+            UiMainController.instance.localPlayer = this;
+        }
+    }
 
+    public void ProfileSync()
+    {
         /* vvvvvvvvv */
         if (isLocalPlayer)
         {
+
             MessageController.instance.MessageSendActionRequest += new MessageController.MessageSendHandler(Echo);
 
             //StartCoroutine(AddAllPlayers(0.5f));
@@ -142,12 +153,17 @@ public class Player : CaptainsMessPlayer {
 
             MessageController.instance.PlayerName = playerName;
 
-            CmdChangeMoneyPlayer(10);
+            PlayerDatabase.instance.PlayerName = playerName;
 
-            UiMainController.instance.localPlayer = this;
+            CmdChangeMoneyPlayer(10);
+            ColorController.instance.SetColoredUI(PlayerDatabase.instance.GetPlayerDeckID(this));
+
+            Debug.Log("Dump on Profile Sync START");
+            PlayerDatabase.instance.Dump();
         }
         /* ^^^^^^^^^ */
     }
+
 
     [Command]
     public void CmdSendSelfie(NetworkInstanceId netId)
@@ -182,18 +198,11 @@ public class Player : CaptainsMessPlayer {
     public override void OnClientEnterLobby()
     {
         base.OnClientEnterLobby();
-
-        StartGameController.instance.SetActiveUIStartGame(true);
-
-		selfie = GameObject.Find("Selfie").GetComponent<Selfie>();
     }
 
-    // VVVVVVVVVVV
-    public IEnumerator SetPlayerName(string name, string deckChoice, float delayTime)
+    public void SetPlayerName(string name)
     {
-        yield return new WaitForSeconds(delayTime);
         CmdSetPlayerName(name);
-        CmdSetPlayerCardDeck(deckChoice);
     }
 
     [Command]
@@ -203,15 +212,29 @@ public class Player : CaptainsMessPlayer {
     }
 
     [Command]
-    public void CmdSetPlayerCardDeck(string id)
+    public void CmdSetPlayerCardDeck(int id)
     {
-        cardDeck = int.Parse(id);
+        cardDeck = id;
+        RpcReadyNextPhase(true);
+    }
+
+    [ClientRpc]
+    public void RpcReadyNextPhase(bool ready)
+    {
+        if (isLocalPlayer)
+        {
+            UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(ready);
+        }
     }
 
     public void SetSelfieBytes(byte[] bytes)
     {
         if(isLocalPlayer)
+        {
             CmdSetSelfieBytes(bytes, gameObject.GetComponent<NetworkIdentity>().netId);
+            //CmdSetNextPhase(GamePhase.ScanDeck);
+            CmdIsReadyForNextPhase(true);
+        }
     }
 
     [Command]
@@ -220,10 +243,6 @@ public class Player : CaptainsMessPlayer {
         if(isServer)
         {
             Debug.Log(gameObject.GetComponent<NetworkIdentity>().netId + "received selfie for " + netId + " >>> " + bytes.Length);
-            /* string deb = "";
-            foreach (byte b in bytes)
-                deb += b.ToString() + ",";
-            Debug.Log("CmdSetSelfieBytes>" + deb);*/
             serverSelfies.Add(new ServerSelfie() { netId = netId, image = bytes });
             serverSelfies.ForEach(s => Debug.Log("[" + s.netId + "]"));
             Debug.Log("count " + serverSelfies.Count);
@@ -238,10 +257,6 @@ public class Player : CaptainsMessPlayer {
             serverSelfies.ForEach(s => Debug.Log("[" + s.netId + "]"));
             ServerSelfie serverSelfie = serverSelfies.Find(s => s.netId == netId);
             Debug.Log("CmdGetSelfieBytes for " + netId + "-->" + serverSelfie.image);
-             /* string deb = "";
-            foreach (byte b in serverSelfie.image)
-                deb += b.ToString() + ",";
-            Debug.Log("CmdGetSelfieBytes>" + deb); */
             RpcSetPlayerSelfie(serverSelfie.image, netId);
         }
     }
@@ -252,17 +267,19 @@ public class Player : CaptainsMessPlayer {
         if(isLocalPlayer)
         {
             Debug.Log("RpcSetTmpSelfie " + image);
-            /* string deb = "";
-            foreach (byte b in image)
-                deb += b.ToString() + ",";
-            Debug.Log("RpcSetPlayerSelfie>" + netId + ">" + deb); */
             PlayerDatabase.instance.SetSelfie(netId, image);
+            if(PlayerDatabase.instance.IsComplete())
+            {
+                Debug.Log("Dump on Profile Sync END");
+                PlayerDatabase.instance.Dump();
+                UpdateProfile();
+                CmdIsReadyForNextPhase(true);
+            }           
         }
 
     }
 
-    [ClientRpc]
-    public void RpcUpdateProfile()
+    public void UpdateProfile()
     {
         if (isLocalPlayer)
         {
@@ -298,9 +315,9 @@ public class Player : CaptainsMessPlayer {
             }
             if (!checksID.ToList().Exists(st => st.secret.Equals(secretID)))
             {
-                checksID.Add(new CheckID(this.netId, targetedPlayerID, secretID));
-                checks.Add(new Check(this, targetedPlayer, targetedSecret));
-                InventoryController.instance.UpdateInventory(targetedSecret, targetedPlayer.playerName, (checksID.Count - 1) % 2 == 0);
+                checksID.Add(new CheckID(this.netId, targetedPlayerID, secretID, false, cardNumber));
+                checks.Add(new Check(this, targetedPlayer, targetedSecret, false, cardNumber));
+                InventoryController.instance.UpdateInventory(targetedSecret, targetedPlayer.playerName, false, cardNumber);
             } else
             {
                 Debug.Log("Secret already in inventory for " + targetedPlayerID + " with cardDeck number " + cardDeck + " and card number " + cardNumber);
@@ -320,30 +337,104 @@ public class Player : CaptainsMessPlayer {
         }
     }
 
+    [ClientRpc]
+    public void RpcLaunchAnimation(GamePhase gamePhase)
+    {
+        if (isLocalPlayer)
+        {
+            UiMainController.instance.SetActiveAllCanvas(false);
+            AnimationController.instance.PlayAnimationTransitionForPhase(gamePhase);
+        }
+    }
+
     [Command]
     public void CmdIsReadyForNextPhase(bool isReady)
     {
         Sequencer.instance.PlayerIsReadyForNextPhase(isReady);
     }
 
+
+    [Command]
+    public void CmdSetNextPhase(GamePhase nextPhase)
+    {
+        RpcStartPhase(nextPhase);
+        if (Sequencer.gamePhase != nextPhase)
+            Sequencer.gamePhase = nextPhase;
+    }
+
     [ClientRpc]
     public void RpcStartPhase(GamePhase gamePhase)
     {
-        Debug.Log("gamephase");
         if (isLocalPlayer)
         {
+            selfie = StartGameController.instance.selfie.GetComponent<Selfie>();
+
+            this.gamePhase = gamePhase;
+            Debug.Log(">>> START PHASE " + gamePhase.ToString());
             switch (gamePhase)
             {
-                case GamePhase.Discussion:
+                case GamePhase.Personnalisation:
+                    StartGameController.instance.StartPersonnalisation();
+                    break;
+                case GamePhase.ScanDeck:
+                    if(VuforiaController.instance.skip == true)
+                    {
+                        CmdSetPlayerCardDeck(int.Parse(netId.ToString()));
+                        UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
+                    }
+                    else
+                        UiMainController.instance.uiVuforia.SetActive(true);
+                    UiMainController.instance.uiStartGame.SetActive(false);
+                    break;
+                case GamePhase.ProfileSync:
+                    ProfileSync();
+                    break;
+                case GamePhase.FirstDiscussion:
+                    NotifController.instance.UpdateNotif();
+                    UiMainController.instance.uiMain.SetActive(true);
+                    UiMainController.instance.uiVuforia.SetActive(false);
+                    break;
+                case GamePhase.DiscussionBeforeAuction:
                     UiMainController.instance.ResetUiMain();
                     UiMainController.instance.uiMain.SetActive(true);
+                    if (GetComponent<PlayerMarker>().TargetIsBank == true) // TODO something cleaner
+                        DecisionBankController.instance.StopPhase();
+                    else
+                        DecisionCheckController.instance.StopPhase();
+                    UiMainController.instance.uiDecision.SetActive(false);
                     UiMainController.instance.uiPublishing.SetActive(false);
                     UiMainController.instance.uiAuction.SetActive(false);
                     UiMainController.instance.uiRevelation.SetActive(false);
                     break;
+                case GamePhase.DiscussionBeforeDecision:
+                    CmdIsGameEnded();
+                    UiMainController.instance.ResetUiMain();
+                    UiMainController.instance.uiMain.SetActive(true);
+                    UiMainController.instance.uiDecision.SetActive(false);
+                    UiMainController.instance.uiPublishing.SetActive(false);
+                    UiMainController.instance.uiNothingPublished.SetActive(false);
+                    UiMainController.instance.uiAuction.SetActive(false);
+                    UiMainController.instance.uiRevelation.SetActive(false);
+                    break;
                 case GamePhase.Decision:
+                    UiMainController.instance.uiDecision.SetActive(true);
+                    GameDecisionController.instance.StartPhase();
+                    UiMainController.instance.uiMain.SetActive(false);
+                    CmdStartTimer(Sequencer.TIMER_DECISION);
+                    break;
+                case GamePhase.DecisionResult:
+                    ProcessBank();
+                    if (GetComponent<PlayerMarker>().TargetIsBank == true)
+                        DecisionBankController.instance.StartPhase();
+                    else
+                        DecisionCheckController.instance.StartPhase(GetComponent<PlayerMarker>().Target);
+                    UiMainController.instance.uiDecision.SetActive(false);
+                    GameDecisionController.instance.StopPhase();
                     break;
                 case GamePhase.Publishing:
+                    CmdResetAuctionData();
+                    AuctionController.instance.ResetUiAuction();
+                    PublishingController.instance.ResetUiPublishing();
                     PublishingController.instance.UpdatePublishingPanel(this);
                     UiMainController.instance.uiMain.SetActive(false);
                     UiMainController.instance.uiPublishing.SetActive(true);
@@ -351,20 +442,46 @@ public class Player : CaptainsMessPlayer {
                 case GamePhase.Auction:
                     if (checkToPublish.secret != null)
                     {
-                        CheckID checkIDToPublish = checksID.ToList().Find(c => checkToPublish.secret.netId.Equals(c.secret));
-                        CmdAddCheckToPublish(checkIDToPublish);
+                        // TODO Some cleanup... I leave it like this just in case of a bug I would know about ;)
+                        //CheckID checkIDToPublish = checksID.ToList().Find(c => checkToPublish.secret.netId.Equals(c.secret));
+                        //CmdAddCheckToPublish(checkIDToPublish);
                     }
                     UiMainController.instance.uiPublishing.SetActive(false);
                     UiMainController.instance.uiAuction.SetActive(true);
                     CmdStartTimer(Sequencer.TIMER_AUCTION);
                     break;
+                case GamePhase.NothingPublished:
+                    CmdChangeMoneyPlayer(playerMoney - 1);
+                    UiMainController.instance.SetActiveAllCanvas(false);
+                    UiMainController.instance.uiNothingPublished.SetActive(true);
+                    break;
                 case GamePhase.Revelation:
-                    UiMainController.instance.uiAuction.SetActive(false);
+                    if (isServer)
+                    {
+                        CmdUpdateRevealSecret();
+                    }
+                    if (AuctionData.instance.checksIDToPublish.Count == 1)
+                    {
+                        if (playerName != PlayerDatabase.instance.GetName(AuctionData.instance.checksIDToPublish[0].playerOwner))
+                        {
+                            CmdChangeMoneyPlayer(playerMoney - 1);
+                        }
+                    }
                     UiMainController.instance.uiRevelation.SetActive(true);
-                    CmdUpdateRevealSecret();
+                    UiMainController.instance.uiAuction.SetActive(false);
+                    break;
+                case GamePhase.EndGame:
+                    RpcLaunchAnimation(GamePhase.EndGame);
                     break;
             }
         }
+    }
+
+    [Command]
+    public void CmdResetAuctionData()
+    {
+        if (isServer)
+            AuctionData.instance.CmdResetAuctionData();
     }
 
     [Command]
@@ -374,41 +491,85 @@ public class Player : CaptainsMessPlayer {
             Sequencer.instance.StartTimer(startTime);
     }
 
+    [ClientRpc]
+    public void RpcUpdateMoneyAfterAuction(int index)
+    {
+        if (isLocalPlayer)
+        {
+            int moneyBidByPlayer = AuctionController.instance.auctionLines[index].GetComponent<AuctionLineController>().moneyBidByLocalPlayer;
+            CmdChangeMoneyPlayer(playerMoney - moneyBidByPlayer);
+        }
+    }
+
     [Command]
     public void CmdUpdateRevealSecret()
     {
         if (isServer)
         {
             CheckID checkToRevealed = AuctionController.instance.CheckToRevealed();
-            NetworkInstanceId playerOwnerID = checkToRevealed.playerOwner;
-            NetworkInstanceId playerTargetedID = checkToRevealed.playerTargeted;
-            NetworkInstanceId secretID = checkToRevealed.secret;
 
-            Player playerOwner = PlayerDatabase.instance.GetPlayer(playerOwnerID);
-            Player playerTargeted = PlayerDatabase.instance.GetPlayer(playerTargetedID);
-
-            Secret secret = null;
-            if (isLocalPlayer)
+            if (checkToRevealed.playerOwner.Value != 0 && checkToRevealed.playerTargeted.Value != 0 && checkToRevealed.secret.Value != 0)
             {
-                secret = ClientScene.FindLocalObject(secretID).GetComponent<Secret>();
-            }
-            else if (isServer)
-            {
-                secret = NetworkServer.FindLocalObject(secretID).GetComponent<Secret>();
-            }
+                NetworkInstanceId playerOwnerID = checkToRevealed.playerOwner;
+                NetworkInstanceId playerTargetedID = checkToRevealed.playerTargeted;
+                NetworkInstanceId secretID = checkToRevealed.secret;
 
-            secret.published = true;
-            playerTargeted.team.GetComponent<Team>().hp--;
+                Player playerOwner = PlayerDatabase.instance.GetPlayer(playerOwnerID);
+                Player playerTargeted = PlayerDatabase.instance.GetPlayer(playerTargetedID);
 
+                Secret secret = null;
+                if (isLocalPlayer)
+                {
+                    secret = ClientScene.FindLocalObject(secretID).GetComponent<Secret>();
+                }
+                else if (isServer)
+                {
+                    secret = NetworkServer.FindLocalObject(secretID).GetComponent<Secret>();
+                }
+
+                foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
+                {
+                    p.RpcUpdateRevealSecret(playerOwnerID, playerTargetedID, secretID, playerTargeted.playerName, secret.secretTextCommon, secret.secretID, checkToRevealed.cardID);
+                }
+
+                if (secret.shared)
+                {
+                    playerTargeted.team.GetComponent<Team>().hp -= 2;
+                }
+                else
+                {
+                    playerTargeted.team.GetComponent<Team>().hp--;
+                }
+            }
+        }
+    }
+
+    [Command]
+    public void CmdIsGameEnded()
+    {
+        if (isServer)
+        {
+            bool isGameEnded = false;
             foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
             {
-                p.RpcUpdateRevealSecret(playerOwnerID, playerTargetedID, secretID, playerTargeted.playerName, secret.secretText, secret.imageID);
+                if (p.team.GetComponent<Team>().hp <= 0)
+                {
+                    isGameEnded = true;
+                    break;
+                }
+            }
+            if (isGameEnded)
+            {
+                foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
+                {
+                    p.CmdSetNextPhase(GamePhase.EndGame);
+                }
             }
         }
     }
 
     [ClientRpc]
-    public void RpcUpdateRevealSecret(NetworkInstanceId playerOwnerID, NetworkInstanceId playerTargetedID, NetworkInstanceId secretID, string playerNameTargeted, string secretText, int imageID)
+    public void RpcUpdateRevealSecret(NetworkInstanceId playerOwnerID, NetworkInstanceId playerTargetedID, NetworkInstanceId secretID, string playerNameTargeted, string secretText, int imageID, int cardID)
     {
         if (isLocalPlayer)
         {
@@ -422,14 +583,28 @@ public class Player : CaptainsMessPlayer {
             {
                 secret = NetworkServer.FindLocalObject(secretID).GetComponent<Secret>();
             }
-            Check checkToAdd = new Check(PlayerDatabase.instance.GetPlayer(playerOwnerID), PlayerDatabase.instance.GetPlayer(playerTargetedID), secret);
-            Debug.Log(checkToAdd);
+            Check checkToAdd = new Check(PlayerDatabase.instance.GetPlayer(playerOwnerID), PlayerDatabase.instance.GetPlayer(playerTargetedID), secret, true, cardID);
             if (!playerName.Equals(playerNameTargeted) && !checks.Any(c => c.playerTargeted.Equals(checkToAdd.playerTargeted) && c.secret.Equals(checkToAdd.secret))) {
                 checks.Add(checkToAdd);
-                checksID.Add(new CheckID(playerOwnerID, playerTargetedID, secretID));
-                InventoryController.instance.UpdateInventory(secret, playerNameTargeted, (checksID.Count - 1) % 2 == 0);
+                checksID.Add(new CheckID(playerOwnerID, playerTargetedID, secretID, true, cardID));
+                InventoryController.instance.UpdateInventory(secret, playerNameTargeted, false, cardID);
+            } else
+            {
+                Check checkPublished = checks.Find(c => c.playerTargeted.Equals(checkToAdd.playerTargeted) && c.secret.Equals(checkToAdd.secret));
+                checks.Remove(checkPublished);
+                checks.Add(checkToAdd);
+                CheckID checkIDPublished = checksID.ToList().Find(c => c.playerTargeted.Equals(playerTargetedID) && c.secret.Equals(secretID));
+                checksID.Remove(checkIDPublished);
+                checksID.Add(new CheckID(playerOwnerID, playerTargetedID, secretID, true, cardID));
+                UpdateAllInventory();
             }
         }
+    }
+
+    public void UpdateAllInventory()
+    {
+        InventoryController.instance.EmptyInventory();
+        checks.ForEach(c => InventoryController.instance.UpdateInventory(c.secret, c.playerTargeted.playerName, c.published, c.cardID));
     }
 
     [Command]
@@ -438,14 +613,22 @@ public class Player : CaptainsMessPlayer {
         if (isServer)
         {
             AuctionData.instance.checksIDToPublish.Add(checkIDToPublish);
-            RpcAddAuctionLine(checkIDToPublish);
+            AuctionData.instance.bidsOnAuction.Add(0);
+            foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
+            {
+                p.RpcAddAuctionLine(checkIDToPublish, AuctionData.instance.checksIDToPublish.Count - 1);
+            }
         }
     }
 
     [ClientRpc]
-    public void RpcAddAuctionLine(CheckID checkIDToPublish)
+    public void RpcAddAuctionLine(CheckID checkIDToPublish, int index)
     {
-        AuctionController.instance.AddAuctionLine(checkIDToPublish);
+        if (isLocalPlayer)
+        {
+            Debug.Log("New check to publish : " + checkIDToPublish.playerOwner + " index " + index);
+            AuctionController.instance.AddAuctionLine(checkIDToPublish, index);
+        }
     }
 
     [ClientRpc]
@@ -464,15 +647,39 @@ public class Player : CaptainsMessPlayer {
         }
     }
 
-    [Command]
-    public void CmdSetNextPhase(GamePhase nextPhase)
+    public void SnapSelfie()
     {
-        RpcStartPhase(nextPhase);
-        if (Sequencer.gamePhase != nextPhase)
-            Sequencer.gamePhase = nextPhase;
+        selfie.Snap(SetSelfieBytes);
     }
 
-    void OnGUI()
+    void ProcessBank()
+    {
+        if (isServer)
+        {
+            int bankCount = 0;
+            foreach (string name in PlayerDatabase.instance.GetAllPlayerNames())
+            {
+                if (PlayerDatabase.instance.GetPlayer(name).GetComponent<PlayerMarker>().TargetIsBank == true)
+                    bankCount++;
+            }
+            if(bankCount > 0)
+            {
+                int money = Bank.instance.bankMoney / bankCount;
+                Bank.instance.bankMoney -= money * bankCount;
+
+                foreach (string name in PlayerDatabase.instance.GetAllPlayerNames())
+                {
+                    if (PlayerDatabase.instance.GetPlayer(name).GetComponent<PlayerMarker>().TargetIsBank == true)
+                    {
+                        PlayerDatabase.instance.GetPlayer(name).playerMoney += money;
+                        PlayerDatabase.instance.GetPlayer(name).playerMoneyExtra = money;
+                    }
+                }
+            }
+        }
+    }
+
+    /*void OnGUI()
     {
         if (isLocalPlayer)
         {
@@ -486,22 +693,16 @@ public class Player : CaptainsMessPlayer {
                 if (gameSession.gameState == GameStateSession.Lobby ||
                     gameSession.gameState == GameStateSession.Countdown)
                 {
-                    
-                    if (StartGameController.instance.nameField.text.Length != 0 && GUILayout.Button(IsReady() ? "Not ready" : "Ready", GUILayout.Width(Screen.width * 0.3f), GUILayout.Height(100)))
+
+                    if (GUILayout.Button(IsReady() ? "Not ready" : "Ready", GUILayout.Width(Screen.width * 0.3f), GUILayout.Height(100)))
                     {
                         if (IsReady())
                         {
                             SendNotReadyToBeginMessage();
-                            StartGameController.instance.nameField.interactable = true;
                         }
                         else
                         {
                             SendReadyToBeginMessage();
-                            StartGameController.instance.nameField.interactable = false;
-                            // Delay time to set player name
-                            Dropdown deckChoice = StartGameController.instance.deckChoice;
-                            StartCoroutine(SetPlayerName(StartGameController.instance.nameField.text, deckChoice.options[deckChoice.value].text, 2f));
-							selfie.Snap(SetSelfieBytes); // VVVVVVVVV
                         }
                     }
                 }
@@ -515,10 +716,42 @@ public class Player : CaptainsMessPlayer {
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
+    }*/
+
+    public void Ready()
+    {
+        if (IsReady())
+        {
+            SendNotReadyToBeginMessage();
+        }
+        else
+        {
+            SendReadyToBeginMessage();
+        }
     }
 
-    void Update()
+    public void Start()
     {
+        if (isLocalPlayer)
+        {
+            StartGameController.instance.Run();
+            //StartGameController.instance.readyButton.onClick.AddListener(Ready);
+        }
+    }
+
+    public void Update()
+    {
+        // Poor solution but works, see https://app.asana.com/0/323764028182496/324543590575070 for details
+        if (gamePhase == GamePhase.Personnalisation)
+        {
+            Button button = StartGameController.instance.readyButton;
+            GameSession gameSession = GameSession.instance;
+            if (isLocalPlayer && !IsReady() && (gameSession.gameState == GameStateSession.Lobby) && button.gameObject.GetComponent<CanvasRenderer>().GetColor() == button.colors.pressedColor * button.colors.colorMultiplier)
+            {
+                SendReadyToBeginMessage();
+                button.interactable = false;
+            }
+        }
     }
 
 }

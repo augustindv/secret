@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: ad5b2931dff4a2b48b8b50c90c6e3c51
+timeCreated: 1492546205
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Cocogoose
+  fontNames:
+  - Cocogoose
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 07eeac70c9103ec47aaf09ea1ff4186d, type: 3}
+  - {fileID: 12800000, guid: 9144aa3643a4511449d4accbe65d2239, type: 3}
+  - {fileID: 12800000, guid: 27ad2c5d3cf7b8945a3271ee9b00763d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

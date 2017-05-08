@@ -35,7 +35,8 @@ public class RevelationController : MonoBehaviour {
     public void Start()
     {
         GoToDiscussion.onClick.AddListener(delegate {
-            UiMainController.instance.localPlayer.CmdSetNextPhase(GamePhase.Discussion);
+            AnimationController.instance.StopAnimation();
+            UiMainController.instance.localPlayer.CmdSetNextPhase(GamePhase.DiscussionBeforeDecision);
         });
     }
 
@@ -50,5 +51,7 @@ public class RevelationController : MonoBehaviour {
             SecretRevealed(playerName, secretText, imageID);
 
         onSecretRevelation.Invoke(playerName, secretText, imageID);
+
+        AnimationController.instance.PlayAnimationSecret(playerName, imageID);
     }
 }

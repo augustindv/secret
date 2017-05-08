@@ -35,7 +35,8 @@ namespace Vuforia
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void InitVuforia()
         {
-            if(!VuforiaConfiguration.Instance.Vuforia.DelayedInitialization)
+
+            if (!VuforiaConfiguration.Instance.Vuforia.DelayedInitialization)
             {
                 VuforiaRuntime.Instance.InitVuforia();
             }

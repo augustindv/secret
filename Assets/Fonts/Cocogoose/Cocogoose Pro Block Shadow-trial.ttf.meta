@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: ad28a0e91db81ee46b99de59549bfa6c
+timeCreated: 1492546205
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Cocogoose Pro Block
+  fontNames:
+  - Cocogoose Pro Block
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a67726b2423bd0d4da5d4027c8a422b8, type: 3}
+  - {fileID: 12800000, guid: 88c4ae88c1dd0d944a47d7a8604f997a, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

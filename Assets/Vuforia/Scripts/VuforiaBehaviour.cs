@@ -21,10 +21,25 @@ namespace Vuforia
             AddOSSpecificExternalDatasetSearchDirs();
 
             gameObject.AddComponent<ComponentFactoryStarterBehaviour>();
-
+            VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
+            VuforiaARController.Instance.RegisterOnPauseCallback(OnPaused);
             base.Awake();
         }
+        private static void OnVuforiaStarted()
+        {
+            CameraDevice.Instance.SetFocusMode(
+                CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
+        }
 
+        private static void OnPaused(bool paused)
+        {
+            if (!paused) // resumed
+            {
+                // Set again autofocus mode when app is resumed
+                CameraDevice.Instance.SetFocusMode(
+                    CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
+            }
+        }
         private static VuforiaBehaviour mVuforiaBehaviour= null;
 
         /// <summary>
@@ -78,5 +93,6 @@ namespace Vuforia
             }
 #endif //UNITY_ANDROID
         }
+
     }
 }

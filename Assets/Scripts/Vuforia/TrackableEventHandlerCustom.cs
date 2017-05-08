@@ -22,7 +22,6 @@ namespace Vuforia
         #endregion // PRIVATE_MEMBER_VARIABLES
 
         private Card associatedCard;
-        private bool cardScanned;
 
         #region UNTIY_MONOBEHAVIOUR_METHODS
 
@@ -72,9 +71,8 @@ namespace Vuforia
 
         private void OnTrackingFound()
         {
-            cardScanned = true;
             VuforiaController.instance.SaveSecret(associatedCard);
-
+            VuforiaController.instance.debug.text = "Trackable " + mTrackableBehaviour.TrackableName + " found";
             Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
         }
 

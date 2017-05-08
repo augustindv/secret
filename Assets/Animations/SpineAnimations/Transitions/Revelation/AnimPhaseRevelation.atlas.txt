@@ -1,0 +1,167 @@
+
+AnimPhaseRevelation.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+A
+  rotate: false
+  xy: 968, 76
+  size: 48, 53
+  orig: 48, 53
+  offset: 0, 0
+  index: -1
+E1
+  rotate: true
+  xy: 2, 21
+  size: 38, 67
+  orig: 38, 67
+  offset: 0, 0
+  index: -1
+E2
+  rotate: true
+  xy: 2, 21
+  size: 38, 67
+  orig: 38, 67
+  offset: 0, 0
+  index: -1
+I
+  rotate: true
+  xy: 640, 93
+  size: 14, 51
+  orig: 14, 51
+  offset: 0, 0
+  index: -1
+L
+  rotate: true
+  xy: 71, 26
+  size: 33, 51
+  orig: 33, 51
+  offset: 0, 0
+  index: -1
+N
+  rotate: true
+  xy: 855, 230
+  size: 44, 54
+  orig: 44, 54
+  offset: 0, 0
+  index: -1
+O
+  rotate: false
+  xy: 968, 131
+  size: 51, 52
+  orig: 51, 52
+  offset: 0, 0
+  index: -1
+R
+  rotate: true
+  xy: 855, 187
+  size: 41, 52
+  orig: 41, 52
+  offset: 0, 0
+  index: -1
+T
+  rotate: true
+  xy: 508, 67
+  size: 40, 52
+  orig: 40, 52
+  offset: 0, 0
+  index: -1
+V
+  rotate: true
+  xy: 453, 59
+  size: 48, 53
+  orig: 48, 53
+  offset: 0, 0
+  index: -1
+fleche
+  rotate: false
+  xy: 71, 2
+  size: 31, 22
+  orig: 31, 22
+  offset: 0, 0
+  index: -1
+flecheB
+  rotate: false
+  xy: 104, 2
+  size: 31, 22
+  orig: 31, 22
+  offset: 0, 0
+  index: -1
+fond-vagues
+  rotate: false
+  xy: 2, 61
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+megaphoneBD
+  rotate: true
+  xy: 911, 403
+  size: 107, 111
+  orig: 107, 111
+  offset: 0, 0
+  index: -1
+megaphoneBG
+  rotate: true
+  xy: 911, 294
+  size: 107, 111
+  orig: 107, 111
+  offset: 0, 0
+  index: -1
+megaphoneHD
+  rotate: true
+  xy: 911, 185
+  size: 107, 111
+  orig: 107, 111
+  offset: 0, 0
+  index: -1
+megaphoneHG
+  rotate: true
+  xy: 855, 76
+  size: 107, 111
+  orig: 107, 111
+  offset: 0, 0
+  index: -1
+newspaper
+  rotate: false
+  xy: 453, 109
+  size: 199, 165
+  orig: 199, 165
+  offset: 0, 0
+  index: -1
+newspaperB
+  rotate: false
+  xy: 654, 109
+  size: 199, 165
+  orig: 199, 165
+  offset: 0, 0
+  index: -1
+traits
+  rotate: false
+  xy: 562, 69
+  size: 37, 38
+  orig: 37, 38
+  offset: 0, 0
+  index: -1
+traitsbas
+  rotate: false
+  xy: 601, 69
+  size: 37, 38
+  orig: 37, 38
+  offset: 0, 0
+  index: -1
+typewriter
+  rotate: false
+  xy: 453, 276
+  size: 227, 234
+  orig: 227, 234
+  offset: 0, 0
+  index: -1
+typewriterB
+  rotate: false
+  xy: 682, 276
+  size: 227, 234
+  orig: 227, 234
+  offset: 0, 0
+  index: -1

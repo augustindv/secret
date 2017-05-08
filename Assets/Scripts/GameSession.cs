@@ -20,7 +20,6 @@ public class GameSession : NetworkBehaviour
 
     [SyncVar]
     public GameStateSession gameState;
-    private Dropdown dropdown;
 
     public static GameSession instance;
     public static int NUMBER_TEAMS = 2;
@@ -59,11 +58,6 @@ public class GameSession : NetworkBehaviour
         bank = Resources.Load<GameObject>("Bank");
         ClientScene.RegisterPrefab(bank);
 
-        /*GameObject auctionLine = Resources.Load<GameObject>("Auction/AuctionLine");
-        Debug.Log(auctionLine);
-        ClientScene.RegisterPrefab(auctionLine);
-        auctionLine = Instantiate(auctionLine);
-        auctionLine.transform.parent = UiMainController.instance.uiAuction.transform.FindChild("Auction");*/
     }
 
     [Server]
@@ -82,6 +76,7 @@ public class GameSession : NetworkBehaviour
         bank = Instantiate(Resources.Load<GameObject>("Bank"));
 
         NetworkServer.Spawn(bank);
+        Bank.instance.bankMoney = 10;
 
         auctionData = Instantiate(Resources.Load<GameObject>("Auction/AuctionData"));
         NetworkServer.Spawn(auctionData);
@@ -93,6 +88,7 @@ public class GameSession : NetworkBehaviour
         foreach (Player p in players)
         {
             p.RpcOnStartedGame();
+            p.RpcStartPhase(GamePhase.Personnalisation);
         }
 
         StartCoroutine(RunGame());
@@ -160,8 +156,14 @@ public class GameSession : NetworkBehaviour
         foreach (GameObject secret in secrets)
         {
             NetworkServer.Spawn(secret);
-            secret.GetComponent<Secret>().secretText = linesList[0].Split(';')[0];
-            secret.GetComponent<Secret>().imageID = int.Parse(linesList[0].Split(';')[1]);
+            int secretID = int.Parse(linesList[0].Split(';')[0]);
+            secret.GetComponent<Secret>().secretID = secretID;
+            Texture2D texture = Resources.Load("Secrets/Icons/icon-" + secretID) as Texture2D;
+            secret.GetComponent<Secret>().spriteIcon = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            secret.GetComponent<Secret>().secretTextCommon = linesList[0].Split(';')[1];
+            secret.GetComponent<Secret>().secretTextProfile = linesList[0].Split(';')[2];
+            secret.GetComponent<Secret>().secretTextClue = linesList[0].Split(';')[3];
+
             linesList.RemoveAt(0);
         }
         secrets.Shuffle();
@@ -173,42 +175,100 @@ public class GameSession : NetworkBehaviour
     [Server]
     public void DispatchSecrets()
     {
-        // TODO : Something more proper and modulable to the number of players (have a problem with syncvar first to resolve)
-
-
-        List<GameObject> tmpListSecrets = secrets.Take(secrets.Count / NUMBER_TEAMS).ToList();
+        List<GameObject> deck = secrets.ToList();
         foreach (GameObject team in teams)
         {
             Team t = team.GetComponent<Team>();
-            int numberOfSharedSecrets = t.players.Count == 1 ? 1 : t.players.Count - 1; // DEBUG : 1 to test with one player only (host test)...
+            // Set Shared secrets
+            int numberOfSharedSecrets = 1;
+            int secretCount = 5;
             for (int i = 0; i < t.players.Count; i++)
             {
                 Player p = t.players[i];
                 for (int j = 0; j < numberOfSharedSecrets; j++)
                 {
                     Player nextPlayer = t.players[(i + 1) % t.players.Count];
-                    Secret secret = tmpListSecrets[0].GetComponent<Secret>();
+                    Secret secret = deck[0].GetComponent<Secret>();
+                    secrets.Find(s => s.GetComponent<Secret>().Equals(secret)).GetComponent<Secret>().shared = true;
+                    p.secrets.Add(new Structures.NetID() { netID = secret.netId });
+                    Debug.Log("Trying to share Secret " + secret.netId);
+                    if (!nextPlayer.netId.Equals(p.netId)) // To handle monoplayer edge case
+                    {
+                        nextPlayer.secrets.Add(new Structures.NetID() { netID = secret.netId });
+                        Debug.Log("Secret " + secret.netId + " IS SHARED!!!");
+                    }
+                    deck.Remove(secret.gameObject);
+                }
+                int tmp = secretCount - numberOfSharedSecrets;
+                for (int j = 0; j < tmp; j++)
+                {
+                    Secret secret = deck[0].GetComponent<Secret>();
+                    p.secrets.Add(new Structures.NetID() { netID = secret.netId });
+                    deck.Remove(secret.gameObject);
+                }
+                p.secrets.Shuffle();
+            }
+        }
+        DumpSecrets();
+    }
+
+    [Server]
+    public void DumpSecrets()
+    {
+        foreach (GameObject team in teams)
+        {
+
+            Team t = team.GetComponent<Team>();
+            Debug.Log("*** Dumping secrets for team " + t.teamName + "***");
+            foreach (Player p in t.players)
+            {
+                string secretsDump = "";
+                for (int i = 0; i < p.secrets.Count; i++)
+                {
+                    secretsDump += "[" + p.secrets[i].netID + "]";
+                }
+                Debug.Log("Player " + p.playerName + " => " + secretsDump);
+            }
+        }
+    }
+
+    [Server]
+    public void DispatchSecretsOld()
+    {
+        // TODO : Something more proper and modulable to the number of players (have a problem with syncvar first to resolve)
+
+
+        List<GameObject> deck = secrets.Take(secrets.Count / NUMBER_TEAMS).ToList();
+        foreach (GameObject team in teams)
+        {
+            Team t = team.GetComponent<Team>();
+            int numberOfSharedSecrets = 2;//t.players.Count == 1 ? 1 : t.players.Count - 1; // DEBUG : 1 to test with one player only (host test)...
+            for (int i = 0; i < t.players.Count; i++)
+            {
+                Player p = t.players[i];
+                for (int j = 0; j < numberOfSharedSecrets; j++)
+                {
+                    Player nextPlayer = t.players[(i + 1) % t.players.Count];
+                    Secret secret = deck[0].GetComponent<Secret>();
                     secrets.Find(s => s.GetComponent<Secret>().Equals(secret)).GetComponent<Secret>().shared = true;
                     p.secrets.Add(new Structures.NetID() { netID = secret.netId });
                     if (!nextPlayer.playerName.Equals(p.playerName))
                     {
                         nextPlayer.secrets.Add(new Structures.NetID() { netID = secret.netId });
                     }
-                    tmpListSecrets.Remove(secret.gameObject);
+                    deck.Remove(secret.gameObject);
                 }
                 int tmp = 5 - p.secrets.Count;
                 for (int j = 0; j < tmp; j++)
                 {
-                    Secret secret = tmpListSecrets[0].GetComponent<Secret>();
+                    Secret secret = deck[0].GetComponent<Secret>();
                     p.secrets.Add(new Structures.NetID() { netID = secret.netId });
-                    tmpListSecrets.Remove(secret.gameObject);
+                    deck.Remove(secret.gameObject);
                 }
                 p.secrets.Shuffle();
-                p.RpcUpdateProfile();
             }
         }
     }
-
     [Client]
     public override void OnStartClient()
     {

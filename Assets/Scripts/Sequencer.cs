@@ -4,12 +4,19 @@ using UnityEngine;
 
 public enum GamePhase
 {
-    Discussion,
+    Personnalisation,
+    ScanDeck,
+    ProfileSync,
+    FirstDiscussion,
+    DiscussionBeforeDecision,
+    DiscussionBeforeAuction,
     Decision,
+    DecisionResult,
     Publishing,
+    NothingPublished,
     Auction,
     Revelation,
-    PhaseAnimation
+    EndGame
 }
 
 public class Sequencer : MonoBehaviour {
@@ -33,13 +40,14 @@ public class Sequencer : MonoBehaviour {
         }
     }
 
-    public static GamePhase gamePhase = GamePhase.Discussion;
+    public static GamePhase gamePhase = GamePhase.Personnalisation;
 
     private int numberOfPlayersReady = 0;
 
     // Timer objects
-    public static int TIMER_DECISION = 5;
-    public static int TIMER_AUCTION = 5;
+    public static int TIMER_DECISION = 4;
+    public static int TIMER_AUCTION = 4;
+    public static int TIMER_MAIN = 60;
 
     public int timeInSeconds = TIMER_DECISION;
     public float time = 0;
@@ -58,7 +66,6 @@ public class Sequencer : MonoBehaviour {
             {
                 StopTimer();
             }
-
         }
 	}
 
@@ -72,12 +79,7 @@ public class Sequencer : MonoBehaviour {
     public void StopTimer()
     {
         timerRunning = false;
-        gamePhase = GetNextPhase(gamePhase);
-        foreach (Player p in GameSession.instance.players)
-        {
-            p.RpcStartPhase(gamePhase);
-        }
-        numberOfPlayersReady = 0;
+        LaunchAnimation();
     }
 
     public void UpdateTimerOnPlayers(int newTimer)
@@ -99,8 +101,19 @@ public class Sequencer : MonoBehaviour {
         }
         if (AllPlayersReady())
         {
-            GoToNextPhase();
+            //GoToNextPhase();
+            LaunchAnimation();
         }
+    }
+
+    public void LaunchAnimation()
+    {
+        gamePhase = GetNextPhase(gamePhase);
+        foreach (Player p in GameSession.instance.players)
+        {
+            p.RpcLaunchAnimation(gamePhase);
+        }
+        numberOfPlayersReady = 0;
     }
 
     public void GoToNextPhase()
@@ -122,18 +135,41 @@ public class Sequencer : MonoBehaviour {
     {
         switch (gamePhase)
         {
-            case GamePhase.Discussion:
+            case GamePhase.Personnalisation:
+                return GamePhase.ScanDeck;
+            case GamePhase.ScanDeck:
+                return GamePhase.ProfileSync;
+            case GamePhase.ProfileSync:
+                return GamePhase.FirstDiscussion;
+            case GamePhase.FirstDiscussion:
+                return GamePhase.Decision;
+            case GamePhase.DiscussionBeforeDecision:
+                return GamePhase.Decision;
+            case GamePhase.DiscussionBeforeAuction:
                 return GamePhase.Publishing;
             case GamePhase.Decision:
-                return GamePhase.Discussion;
+                return GamePhase.DecisionResult;
+            case GamePhase.DecisionResult:
+                return GamePhase.DiscussionBeforeAuction;
             case GamePhase.Publishing:
-                return GamePhase.Auction;
+                if (AuctionData.instance.checksIDToPublish.Count == 0)
+                {
+                    return GamePhase.NothingPublished;
+                } else if (AuctionData.instance.checksIDToPublish.Count == 1)
+                {
+                    return GamePhase.Revelation;
+                } else
+                {
+                    return GamePhase.Auction;
+                }
+            case GamePhase.NothingPublished:
+                return GamePhase.DiscussionBeforeDecision;
             case GamePhase.Auction:
                 return GamePhase.Revelation;
             case GamePhase.Revelation:
-                return GamePhase.Discussion;
+                return GamePhase.DiscussionBeforeDecision;
             default:
-                return GamePhase.Discussion;
+                return GamePhase.DiscussionBeforeDecision;
         }
     }
 }

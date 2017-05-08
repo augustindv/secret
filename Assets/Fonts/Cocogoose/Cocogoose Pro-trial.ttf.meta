@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 07eeac70c9103ec47aaf09ea1ff4186d
+timeCreated: 1492546204
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Cocogoose
+  fontNames:
+  - Cocogoose
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

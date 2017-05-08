@@ -26,38 +26,71 @@ public class AuctionController : MonoBehaviour {
     }
 
     public GameObject auctionLinePrefab;
+    public GameObject auctionContent;
     public List<GameObject> auctionLines = new List<GameObject>();
+    public int moneyBidTotal;
 
-    public void AddAuctionLine(CheckID checkIDToPublish)
+    public void ResetUiAuction()
     {
-        GameObject auctionLine = Instantiate(auctionLinePrefab, GameObject.Find("UiAuction").transform.FindChild("Auction"));
-        auctionLine.GetComponent<AuctionLineController>().index = auctionLines.Count;
+        auctionLines = new List<GameObject>();
+        moneyBidTotal = 0;
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in auctionContent.transform) children.Add(child.gameObject);
+        children.ForEach(child => Destroy(child));
+    }
+
+    public void AddAuctionLine(CheckID checkIDToPublish, int index)
+    {
+        GameObject auctionLine = Instantiate(auctionLinePrefab, auctionContent.transform);
+        auctionLine.GetComponent<AuctionLineController>().index = index;
         Sprite sprite = PlayerDatabase.instance.GetSprite(PlayerDatabase.instance.GetName(checkIDToPublish.playerOwner));
-        auctionLine.transform.FindChild("Progress").FindChild("Head").GetComponent<Image>().sprite = sprite;
+        auctionLine.transform.FindChild("Progress").FindChild("Chest").FindChild("Head").GetComponent<Image>().sprite = sprite;
+        Texture2D texture = Resources.Load("Secrets/Chests/chest-" + PlayerDatabase.instance.GetPlayerDeckID(checkIDToPublish.playerOwner)) as Texture2D;
+        auctionLine.transform.FindChild("Progress").FindChild("Chest").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        auctionLine.transform.FindChild("PlayerName").GetComponent<Text>().text = PlayerDatabase.instance.GetName(checkIDToPublish.playerOwner);
+        auctionLine.transform.FindChild("Progress").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(checkIDToPublish.playerOwner);
+        auctionLine.transform.FindChild("AuctionLineBorder").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
         auctionLines.Add(auctionLine);
+        Debug.Log("New auction line : " + auctionLine +" index " + index);
     }
 
     public void UpdateBidOnAuction(int index)
     {
         AuctionLineController auction = auctionLines[index].GetComponent<AuctionLineController>();
-        auction.moneyBid++;
-        auction.MoneyBidHasChanged(auction.moneyBid, auction.moneyBid * AuctionLineController.MAX_PROGRESS_BAR_WIDTH / Bank.instance.totalMoneyInGame);
+        AuctionData.instance.bidsOnAuction[index]++;
+        auction.MoneyBidHasChanged(AuctionData.instance.bidsOnAuction[index], (float) AuctionData.instance.bidsOnAuction[index] * AuctionLineController.MAX_PROGRESS_BAR_WIDTH / 70f); // 70 = total money in game
     }
 
     public CheckID CheckToRevealed()
     {
-        int index = 0;
         int moneyBidRef = 0;
         List<CheckID> winners = new List<CheckID>();
+        List<GameObject> auctionLinesWinners = new List<GameObject>();
         foreach (GameObject auctionLine in auctionLines)
         {
-            int tmpMoneyBid = auctionLine.GetComponent<AuctionLineController>().moneyBid;
-            if (tmpMoneyBid >= moneyBidRef)
+            int index = auctionLine.GetComponent<AuctionLineController>().index;
+            int tmpMoneyBid = AuctionData.instance.bidsOnAuction[index];
+            if (tmpMoneyBid == moneyBidRef)
             {
                 winners.Add(AuctionData.instance.checksIDToPublish[index]);
+                auctionLinesWinners.Add(auctionLine);
+                moneyBidRef = tmpMoneyBid;
+            } else if (tmpMoneyBid > moneyBidRef)
+            {
+                winners = new List<CheckID>();
+                winners.Add(AuctionData.instance.checksIDToPublish[index]);
+                auctionLinesWinners = new List<GameObject>();
+                auctionLinesWinners.Add(auctionLine);
                 moneyBidRef = tmpMoneyBid;
             }
-            index++;
+        }
+
+        foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
+        {
+            foreach (GameObject a in auctionLinesWinners)
+            {
+                p.RpcUpdateMoneyAfterAuction(a.GetComponent<AuctionLineController>().index);
+            }
         }
 
         winners.Shuffle();

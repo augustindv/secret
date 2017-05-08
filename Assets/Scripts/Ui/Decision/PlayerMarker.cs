@@ -4,16 +4,45 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerMarker : NetworkBehaviour {
+    GameObject decisionMarker;
+    public bool isDecisionRunning;
+    public string Target { get; set; }
+    public bool TargetIsBank
+    {
+        get
+        {
+            return targetIsBank;
+        }
+        set
+        {
+            if (isServer)
+                targetIsBank = value;
+        }
+    }
+    [SyncVar]
+    public bool targetIsBank;
 
-	// Use this for initialization
-	void Start () {
-		
+
+	void Start ()
+    {
+       decisionMarker = transform.FindChild("DecisionMarker").gameObject;
 	}
 
-    // Update is called once per frame
+    public void StartDecision()
+    {
+        decisionMarker.SetActive(true);
+        isDecisionRunning = true;
+    }
+
+    public void StopDecision()
+    {
+        decisionMarker.SetActive(false);
+        isDecisionRunning = false;
+    }
+
     void FixedUpdate()
     {
-        if( isLocalPlayer)
+        if( isLocalPlayer && isDecisionRunning)
         {
             if (Input.GetMouseButton(0) == true)
             {
@@ -21,5 +50,10 @@ public class PlayerMarker : NetworkBehaviour {
                 transform.position = worldPoint;
             }
         }
+    }
+
+    void Update()
+    {
+        //Debug.Log("target " + Target);
     }
 }

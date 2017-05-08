@@ -8,15 +8,13 @@ public class Secret : NetworkBehaviour {
     [SyncVar]
     public bool shared;
     [SyncVar]
-    public string secretText;
+    public string secretTextProfile;
     [SyncVar]
-    public int card1Id;
+    public string secretTextCommon;
     [SyncVar]
-    public int card2Id;
+    public string secretTextClue;
     [SyncVar]
-    public bool published;
+    public int secretID;
 
-    // TODO : Image ?
-    [SyncVar]
-    public int imageID;
+    public Sprite spriteIcon;
 }

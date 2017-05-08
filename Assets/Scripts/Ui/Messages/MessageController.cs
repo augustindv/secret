@@ -59,7 +59,6 @@ public class MessageController : MonoBehaviour {
 
     public void GameStart()
     {
-        UiMainController.instance.uiMain.SetActive(true);
         foreach (string name in PlayerDatabase.instance.GetAllPlayerNames())
         {
             Debug.Log("Controller add " + name);

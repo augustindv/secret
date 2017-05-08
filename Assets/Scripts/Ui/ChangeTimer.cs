@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class ChangeTimer : MonoBehaviour {
 
-    public Text timer;
+    public Text auctionTimer;
+    public Text decisionTimer;
 
     public void TimerHasChanged(int newTimer)
     {
-        timer.text = newTimer.ToString();
+        auctionTimer.text = newTimer.ToString();
+        decisionTimer.text = newTimer.ToString();
     }
 }
