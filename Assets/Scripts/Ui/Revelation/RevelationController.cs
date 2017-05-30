@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class SecretRevelationUnityEvent : UnityEvent<string, string, int>
+public class SecretRevelationUnityEvent : UnityEvent<string, string>
 {
 }
 
@@ -35,22 +35,28 @@ public class RevelationController : MonoBehaviour {
     public void Start()
     {
         GoToDiscussion.onClick.AddListener(delegate {
-            AnimationController.instance.StopAnimation();
-            UiMainController.instance.localPlayer.CmdSetNextPhase(GamePhase.DiscussionBeforeDecision);
+            AnimationController.instance.StopAnimationSecret();
+            AnimationController.instance.PlayWaitingAnimation();
+            //UiMainController.instance.localPlayer.CmdSetNextPhase(GamePhase.DiscussionBeforeDecision);
+            UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
+            UiMainController.instance.uiRevelation.SetActive(false);
+            GoToDiscussion.gameObject.SetActive(false);
         });
     }
 
     public SecretRevelationUnityEvent onSecretRevelation;
 
-    public delegate void RevealSecret(string playerName, string secretText, int imageID);
+    public delegate void RevealSecret(string playerName, string secretText);
     public event RevealSecret SecretRevealed;
 
     public void SecretIsRevealed(string playerName, string secretText, int imageID)
     {
-        if (SecretRevealed != null)
-            SecretRevealed(playerName, secretText, imageID);
+        GoToDiscussion.gameObject.SetActive(true);
 
-        onSecretRevelation.Invoke(playerName, secretText, imageID);
+        if (SecretRevealed != null)
+            SecretRevealed(playerName, secretText);
+
+        onSecretRevelation.Invoke(playerName, secretText);
 
         AnimationController.instance.PlayAnimationSecret(playerName, imageID);
     }

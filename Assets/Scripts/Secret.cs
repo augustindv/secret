@@ -17,4 +17,13 @@ public class Secret : NetworkBehaviour {
     public int secretID;
 
     public Sprite spriteIcon;
+
+    public Secret(bool shared, string secretTextProfile, string secretTextCommon, int secretID)
+    {
+        this.shared = shared;
+        this.secretTextProfile = secretTextProfile;
+        this.secretTextCommon = secretTextCommon;
+        this.secretID = secretID;
+    }
+
 }

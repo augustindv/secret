@@ -85,6 +85,9 @@ public class AuctionController : MonoBehaviour {
             }
         }
 
+        int tmpBankMoney = Bank.instance.bankMoney + moneyBidRef;
+        Bank.instance.bankMoney = tmpBankMoney;
+
         foreach (Player p in PlayerDatabase.instance.GetAllPlayers())
         {
             foreach (GameObject a in auctionLinesWinners)

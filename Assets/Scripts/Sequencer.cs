@@ -16,6 +16,7 @@ public enum GamePhase
     NothingPublished,
     Auction,
     Revelation,
+    IsGameEnded,
     EndGame
 }
 
@@ -45,9 +46,10 @@ public class Sequencer : MonoBehaviour {
     private int numberOfPlayersReady = 0;
 
     // Timer objects
-    public static int TIMER_DECISION = 4;
-    public static int TIMER_AUCTION = 4;
-    public static int TIMER_MAIN = 60;
+    public static int TIMER_DECISION = 18;
+    public static int TIMER_AUCTION = 20;
+    public static int TIMER_DISCUSSION = 60;
+    public static int TIMER_FIRST_DISCUSSION = 80;
 
     public int timeInSeconds = TIMER_DECISION;
     public float time = 0;
@@ -64,7 +66,7 @@ public class Sequencer : MonoBehaviour {
                 time = 0;
             } else if (timeInSeconds <= 0)
             {
-                StopTimer();
+                StopTimerAndLaunchAnimation();
             }
         }
 	}
@@ -76,10 +78,17 @@ public class Sequencer : MonoBehaviour {
         UpdateTimerOnPlayers(timeInSeconds);
     }
 
-    public void StopTimer()
+    public void StopTimerAndLaunchAnimation()
     {
         timerRunning = false;
         LaunchAnimation();
+    }
+
+    public void StopTimer()
+    {
+        timerRunning = false;
+        timeInSeconds = 0;
+        UpdateTimerOnPlayers(0);
     }
 
     public void UpdateTimerOnPlayers(int newTimer)
@@ -167,6 +176,8 @@ public class Sequencer : MonoBehaviour {
             case GamePhase.Auction:
                 return GamePhase.Revelation;
             case GamePhase.Revelation:
+                return GamePhase.IsGameEnded;
+            case GamePhase.IsGameEnded:
                 return GamePhase.DiscussionBeforeDecision;
             default:
                 return GamePhase.DiscussionBeforeDecision;

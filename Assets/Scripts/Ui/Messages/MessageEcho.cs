@@ -5,11 +5,11 @@ public class MessageEcho : MonoBehaviour
 
     void Awake()
     {
-        text = GetComponent<Text>();
+        //text = GetComponent<Text>();
     }
 
     public void Echo(string src, string dst, string message, bool isRx)
     {
-        text.text = src + " " + dst + " " + message + " rx:" + isRx;
+        //text.text = src + " " + dst + " " + message + " rx:" + isRx;
     }
 }

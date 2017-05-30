@@ -9,12 +9,13 @@ public class PlayerDatabase : MonoBehaviour {
     public Texture2D mask;
     public string PlayerName { get; set; }
 
-    struct PlayerData
+    class PlayerData
     {
         public Player player;
         public string name;
         public NetworkInstanceId netId;
         public Sprite sprite;
+        public Sprite chestSprite;
         public Texture2D colorTexture;
         public Texture2D chestTexture;
         public Texture2D texture;
@@ -51,8 +52,24 @@ public class PlayerDatabase : MonoBehaviour {
 
     public void AddPlayer(Player player, string name, NetworkInstanceId netId, int cardDeck)
     {
-        if(players.ContainsKey(name) == false)
-            players.Add(name, new PlayerData() { sprite = null, player = player, name = name, netId = netId, cardDeck = cardDeck, deckColor = GetColor(cardDeck) });
+        if (players.ContainsKey(name) == false)
+        {
+            Texture2D texture = Resources.Load("Decision/Chests/chest-" +cardDeck) as Texture2D;
+            PlayerData playerData = new PlayerData()
+            {
+                sprite = null,
+                player = player,
+                name = name,
+                netId = netId,
+                cardDeck = cardDeck,
+                chestSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f), 
+                deckColor = GetColor(cardDeck)
+            };
+
+            if (players.ContainsKey(name) == false)
+                players.Add(name, playerData);
+        }
+
     }
 
     public void SetSelfie(NetworkInstanceId netId, byte[] imageBytes)
@@ -71,6 +88,7 @@ public class PlayerDatabase : MonoBehaviour {
         string name = "";
         int cardDeck = 0;
         Player player = null;
+        Sprite chestSprite = null;
         foreach (var entry in players)
         {
             if(entry.Value.netId == netId)
@@ -78,6 +96,7 @@ public class PlayerDatabase : MonoBehaviour {
                 name = entry.Value.name;
                 cardDeck = entry.Value.cardDeck;
                 player = entry.Value.player;
+                chestSprite = entry.Value.chestSprite;
             }
         }
 
@@ -99,7 +118,7 @@ public class PlayerDatabase : MonoBehaviour {
             Texture2D colorTexture = Resources.Load("Secrets/Colors/color-" + cardDeck) as Texture2D;
             Texture2D chestTexture = Resources.Load("Secrets/Chests/chest-" + cardDeck) as Texture2D;
             players.Add(name, new PlayerData() { player = player, name = name, netId = netId, sprite = sprite, colorTexture = colorTexture, chestTexture = chestTexture,
-                texture = texture, cardDeck = cardDeck, deckColor = GetColor(cardDeck) });
+                texture = texture, cardDeck = cardDeck, deckColor = GetColor(cardDeck) , chestSprite = chestSprite});
         }
 
         foreach (var entry in players)
@@ -126,6 +145,10 @@ public class PlayerDatabase : MonoBehaviour {
         PlayerData playerData;
 
         players.TryGetValue(name, out playerData);
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+        }
 
         return playerData.netId;
     }
@@ -140,6 +163,11 @@ public class PlayerDatabase : MonoBehaviour {
             listData.Add(data);
         }
         playerData = listData.Find(data => data.cardDeck == cardDeck);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find cardDeck=[" + cardDeck + "]");
+        }
 
         return playerData.netId;
     }
@@ -177,7 +205,28 @@ public class PlayerDatabase : MonoBehaviour {
 
         players.TryGetValue(name, out playerData);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
+
         return playerData.sprite;
+    }
+
+    public Sprite GetChestSprite(string name)
+    {
+        PlayerData playerData;
+
+        players.TryGetValue(name, out playerData);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
+
+        return playerData.chestSprite;
     }
 
     public Texture2D GetColorTexture(string name)
@@ -185,6 +234,12 @@ public class PlayerDatabase : MonoBehaviour {
         PlayerData playerData;
 
         players.TryGetValue(name, out playerData);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
 
         return playerData.colorTexture;
     }
@@ -194,6 +249,12 @@ public class PlayerDatabase : MonoBehaviour {
         PlayerData playerData;
 
         players.TryGetValue(name, out playerData);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
 
         return playerData.chestTexture;
     }
@@ -243,6 +304,12 @@ public class PlayerDatabase : MonoBehaviour {
 
         players.TryGetValue(name, out playerData);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
+
         return playerData.player;
     }
 
@@ -255,6 +322,12 @@ public class PlayerDatabase : MonoBehaviour {
             listData.Add(data);
         playerData = listData.Find(data => data.netId == netId);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return null;
+        }
+
         return playerData.player;
     }
 
@@ -266,6 +339,12 @@ public class PlayerDatabase : MonoBehaviour {
         foreach (PlayerData data in players.Values)
             listData.Add(data);
         playerData = listData.Find(data => data.netId == netId);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return Color.cyan;
+        }
 
         return playerData.deckColor;
     }
@@ -286,6 +365,12 @@ public class PlayerDatabase : MonoBehaviour {
             listData.Add(data);
         playerData = listData.Find(data => data.player == player);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return Color.cyan;
+        }
+
         return playerData.deckColor;
     }
 
@@ -298,6 +383,18 @@ public class PlayerDatabase : MonoBehaviour {
             listData.Add(data);
         playerData = listData.Find(data => data.player == player);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return 0;
+        }
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return 0;
+        }
+
         return playerData.cardDeck;
     }
 
@@ -309,6 +406,12 @@ public class PlayerDatabase : MonoBehaviour {
         foreach (PlayerData data in players.Values)
             listData.Add(data);
         playerData = listData.Find(data => data.netId == netID);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return 0;
+        }
 
         return playerData.cardDeck;
     }
@@ -324,10 +427,48 @@ public class PlayerDatabase : MonoBehaviour {
 
         players.TryGetValue(name, out playerData);
 
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return Color.cyan;
+        }
+
         switch (playerData.cardDeck)
         {
             case 1:
                 return new Color(244f / 255f, 208f / 255f, 37f / 255f, 1f);
+            case 2:
+                return new Color(157f / 255f, 205f / 255f, 227f / 255f, 1f);
+            case 3:
+                return new Color(198f / 255f, 44f / 255f, 67f / 255f, 1f);
+            case 4:
+                return new Color(206f / 255f, 94f / 255f, 41f / 255f, 1f);
+            case 5:
+                return new Color(56f / 255f, 177f / 255f, 137f / 255f, 1f);
+            case 6:
+                return new Color(100f / 255f, 39f / 255f, 127f / 255f, 1f);
+            default:
+                return new Color(0, 0, 0, 1f);
+        }
+    }
+
+    public Color GetDarkerColor(string name)
+    {
+        PlayerData playerData;
+
+        players.TryGetValue(name, out playerData);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return Color.cyan;
+        }
+
+        switch (playerData.cardDeck)
+        {
+            case 1:
+                //return new Color(244f / 255f, 208f / 255f, 37f / 255f, 1f);
+                return new Color(189 / 255f, 158 / 255f, 9 / 255f, 1f);
             case 2:
                 return new Color(157f / 255f, 205f / 255f, 227f / 255f, 1f);
             case 3:
@@ -361,6 +502,37 @@ public class PlayerDatabase : MonoBehaviour {
                 return new Color(100f / 255f, 39f / 255f, 127f / 255f, 1f);
             default:
                 return new Color(0, 0, 0, 1f);
+        }
+    }
+
+    public string GetColorHex(string name)
+    {
+        PlayerData playerData;
+
+        players.TryGetValue(name, out playerData);
+
+        if (playerData == null)
+        {
+            Debug.LogWarning("PlayerDataBase: can't find name=[" + name + "]");
+            return "";
+        }
+
+        switch (playerData.cardDeck)
+        {
+            case 1:
+                return "#f4d025";
+            case 2:
+                return "#9dcde3";
+            case 3:
+                return "#c62c43";
+            case 4:
+                return "#ce5e29";
+            case 5:
+                return "#38b189";
+            case 6:
+                return "#64277f";
+            default:
+                return "";
         }
     }
 }

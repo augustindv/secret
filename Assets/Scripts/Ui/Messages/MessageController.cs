@@ -61,8 +61,8 @@ public class MessageController : MonoBehaviour {
     {
         foreach (string name in PlayerDatabase.instance.GetAllPlayerNames())
         {
-            Debug.Log("Controller add " + name);
-            onMessageAddDst.Invoke(name);
+           // if(name != PlayerName)
+                onMessageAddDst.Invoke(name);
         }
     }
 
@@ -73,9 +73,10 @@ public class MessageController : MonoBehaviour {
 
     public void Send(string src, string dst, string message, bool isRx)
     {
-        onMessageSend.Invoke(src, dst, message, isRx);
+        string outMessage = message.Substring(0, Mathf.Min(80, message.Length));
+        onMessageSend.Invoke(src, dst, outMessage, isRx);
         if (MessageSendActionRequest != null)
-            MessageSendActionRequest(src, dst, message);
+            MessageSendActionRequest(src, dst, outMessage);
     }
 
     public void Receive(string src, string dst, string message, bool isRx)

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ChangeScreen : MonoBehaviour {
 
     public static Sprite[] buttonsSprites;
+    public GameObject newMessageIcon;
 
     private static Button[] buttons;
 
@@ -35,6 +36,7 @@ public class ChangeScreen : MonoBehaviour {
                 buttons[0].image.overrideSprite = buttonsSprites[0];
                 buttons[1].image.overrideSprite = buttonsSprites[1];
                 buttons[2].image.overrideSprite = null;
+                //  TODO confirm UX newMessageIcon.SetActive(false);
                 break;
             default:
                 break;

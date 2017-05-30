@@ -65,7 +65,7 @@ public class AuctionLineController : MonoBehaviour {
 
     void Start()
     {
-        MoneyController.instance.MoneyHasChanged(UiMainController.instance.localPlayer.playerMoney);
+        //MoneyController.instance.MoneyHasChanged(UiMainController.instance.localPlayer.playerMoney);
         buttonToBid.onClick.AddListener(ClickToBid);
         MoneyBidHasChanged(0, 0);
     }

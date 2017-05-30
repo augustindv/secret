@@ -24,12 +24,13 @@ public class DecisionCheckController : MonoBehaviour {
         }
     }
 
-    public void StartPhase (string targetName)
+    public void StartPhase(string targetName)
     {
         // TODO anim in
         uiDecisionCheck.SetActive(true);
         VuforiaController.instance.Reset();
         VuforiaController.instance.ScanCard(targetName, new VuforiaController.VuforiaScanDone(ScanDone));
+        AudioController.instance.PlayLocalFx("DecisionCheck");
     }
 	
     public void ScanDone(int deckId, int cardId)
@@ -44,5 +45,6 @@ public class DecisionCheckController : MonoBehaviour {
 	public void StopPhase()
     {
         uiDecisionCheck.SetActive(false);
+        AnimationController.instance.StopWaitingAnimation();
     }
 }

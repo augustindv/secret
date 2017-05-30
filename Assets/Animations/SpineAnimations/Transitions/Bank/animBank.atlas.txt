@@ -1,0 +1,132 @@
+
+animBank.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+billet
+  rotate: false
+  xy: 2, 328
+  size: 433, 227
+  orig: 433, 227
+  offset: 0, 0
+  index: -1
+diamant1
+  rotate: false
+  xy: 453, 877
+  size: 194, 129
+  orig: 194, 129
+  offset: 0, 0
+  index: -1
+diamant2
+  rotate: false
+  xy: 2, 197
+  size: 194, 129
+  orig: 194, 129
+  offset: 0, 0
+  index: -1
+fond-vagues copie
+  rotate: false
+  xy: 2, 557
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+piece1
+  rotate: false
+  xy: 841, 887
+  size: 119, 119
+  orig: 119, 119
+  offset: 0, 0
+  index: -1
+piece2
+  rotate: false
+  xy: 330, 140
+  size: 81, 82
+  orig: 81, 82
+  offset: 0, 0
+  index: -1
+piece3
+  rotate: false
+  xy: 330, 56
+  size: 83, 82
+  orig: 83, 82
+  offset: 0, 0
+  index: -1
+piece4
+  rotate: false
+  xy: 572, 633
+  size: 119, 119
+  orig: 119, 119
+  offset: 0, 0
+  index: -1
+piece5
+  rotate: false
+  xy: 393, 244
+  size: 81, 82
+  orig: 81, 82
+  offset: 0, 0
+  index: -1
+piece6
+  rotate: false
+  xy: 413, 160
+  size: 83, 82
+  orig: 83, 82
+  offset: 0, 0
+  index: -1
+stack1
+  rotate: false
+  xy: 120, 2
+  size: 101, 193
+  orig: 101, 193
+  offset: 0, 0
+  index: -1
+stack2
+  rotate: false
+  xy: 649, 891
+  size: 190, 115
+  orig: 190, 115
+  offset: 0, 0
+  index: -1
+stack3
+  rotate: false
+  xy: 198, 224
+  size: 193, 102
+  orig: 193, 102
+  offset: 0, 0
+  index: -1
+stack4
+  rotate: false
+  xy: 2, 5
+  size: 116, 190
+  orig: 116, 190
+  offset: 0, 0
+  index: -1
+stack5
+  rotate: false
+  xy: 223, 29
+  size: 105, 193
+  orig: 105, 193
+  offset: 0, 0
+  index: -1
+stack6
+  rotate: false
+  xy: 453, 754
+  size: 187, 121
+  orig: 187, 121
+  offset: 0, 0
+  index: -1
+stack7
+  rotate: false
+  xy: 572, 529
+  size: 193, 102
+  orig: 193, 102
+  offset: 0, 0
+  index: -1
+stack8
+  rotate: false
+  xy: 453, 563
+  size: 117, 189
+  orig: 117, 189
+  offset: 0, 0
+  index: -1

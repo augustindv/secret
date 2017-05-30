@@ -9,11 +9,14 @@ public class InventoryUpdate : MonoBehaviour {
     public GameObject secretsFound;
     public GameObject secretsRevealed;
 
-    public void AddSecret(string playerNameTarget, string secretText, string imageCardID, bool published)
+    public void AddSecret(string playerNameTarget, string secretText, string imageCardID, string publishedAndShared)
     {
         int imageID = int.Parse(imageCardID.Split(',')[0]);
         string cardID = imageCardID.Split(',')[1];
-        Color playerColor = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
+        bool published = publishedAndShared.Split(',')[0] == "1";
+        bool shared = publishedAndShared.Split(',')[1] == "1";
+        Player p = PlayerDatabase.instance.GetPlayer(playerNameTarget);
+        Color playerColor = published ? PlayerDatabase.instance.GetPlayerDeckColor(p) : PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);
         GameObject inventorySecret = null;
         if (!published)
         {
@@ -34,14 +37,23 @@ public class InventoryUpdate : MonoBehaviour {
         }
 
         inventorySecret.transform.localScale = new Vector3(1, 1, 1);
-        inventorySecret.transform.FindChild("TextSecret").GetComponent<Text>().text = "<b>" + playerNameTarget + "</b> " + secretText;
+        inventorySecret.transform.FindChild("TextSecret").GetComponent<Text>().text = playerNameTarget + " " + secretText;
         Texture2D texture = Resources.Load("Secrets/Icons/icon-" + imageID) as Texture2D;
         Transform secretIcon = inventorySecret.transform.FindChild("Image");
         GameObject color = secretIcon.FindChild("Color").gameObject;
         GameObject icon = secretIcon.FindChild("Icon").gameObject;
         GameObject chest = secretIcon.FindChild("Chest").gameObject;
         GameObject holder = secretIcon.FindChild("Holder").gameObject;
-        Player p = PlayerDatabase.instance.GetPlayer(playerNameTarget);
+        GameObject sharedImage = inventorySecret.transform.FindChild("Shared").gameObject;
+        if (shared && published)
+        {
+            sharedImage.SetActive(true);
+            sharedImage.GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(p);
+        }
+        else
+        {
+            sharedImage.SetActive(false);
+        }
         secretIcon.FindChild("Icon").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         texture = Resources.Load("Secrets/Colors/color-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
         color.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
@@ -52,7 +64,7 @@ public class InventoryUpdate : MonoBehaviour {
         inventorySecret.transform.FindChild("SecretBorder").GetComponent<Image>().color = playerColor;
         inventorySecret.transform.FindChild("SecretNumber").GetComponent<Image>().color = playerColor;
         inventorySecret.transform.FindChild("SecretNumber").FindChild("Text").GetComponent<Text>().text = cardID;
-        inventorySecret.GetComponent<Button>().onClick.AddListener(delegate { InventoryController.instance.OpenSecretPopup(playerNameTarget, secretText, imageID); });
+        inventorySecret.GetComponent<Button>().onClick.AddListener(delegate { InventoryController.instance.OpenSecretPopup(playerNameTarget, secretText, imageID, shared && published); });
 
     }
 }

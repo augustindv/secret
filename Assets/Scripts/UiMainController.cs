@@ -44,6 +44,8 @@ public class UiMainController : MonoBehaviour {
     public GameObject uiRevelation;
     public GameObject uiStartGame;
     public GameObject uiVuforia;
+    public GameObject uiEndGame;
+    public GameObject uiDecisionBank;
 
     private float startTime;
     private Vector2 startPos;
@@ -60,6 +62,8 @@ public class UiMainController : MonoBehaviour {
 
     [HideInInspector]
     public Player localPlayer;
+
+    public bool inTuto;
 
     // Instance
     public static UiMainController uiMainController;
@@ -87,13 +91,12 @@ public class UiMainController : MonoBehaviour {
         buttons[1].onClick.AddListener(delegate { Move(0); });
         buttons[2].onClick.AddListener(delegate { Move(1); });
 
-        animator = movingPanel.GetComponent<Animator>();
-
         uiStartGame.SetActive(true);
     }
 
     public void SetActiveAllCanvas(bool active)
     {
+        Debug.Log("All " + active);
         uiMain.SetActive(active);
         uiPublishing.SetActive(active);
         uiAuction.SetActive(active);
@@ -102,7 +105,9 @@ public class UiMainController : MonoBehaviour {
         uiNothingPublished.SetActive(active);
         uiStartGame.SetActive(active);
         uiVuforia.SetActive(active);
-}
+        uiEndGame.SetActive(active);
+        uiDecisionBank.SetActive(active);
+    }
 
     public void ResetUiMain()
     {
@@ -192,19 +197,6 @@ public class UiMainController : MonoBehaviour {
         }
     }
 
-    /*IEnumerator MoveCanvas(float width, float time)
-    {
-        float elapsedTime = 0;
-        Vector3 startingPos = movingPanel.transform.position;
-        Vector3 newPosition = movingPanel.transform.position + new Vector3(width, 0, 0);
-        while (elapsedTime < time)
-        {
-            //movingPanel.transform.position = Vector3.Lerp(startingPos, newPosition, (elapsedTime / time));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-    }*/
-
     void Update()
     {
         if (Input.touches.Length > 0)
@@ -246,4 +238,5 @@ public class UiMainController : MonoBehaviour {
             }
         }
     }
+
 }

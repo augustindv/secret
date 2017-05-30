@@ -10,10 +10,12 @@ public class GameDecisionController : MonoBehaviour
     public GameObject gameDecision;
     private static GameDecisionController gameDecisionController;
     List<GameObject> playerObjects = new List<GameObject>();
+    public bool IsPlaying { get; set; }
 
     // Use this for initialization
     void Start()
     {
+        IsPlaying = true;
     }
 
     // Update is called once per frame
@@ -54,7 +56,12 @@ public class GameDecisionController : MonoBehaviour
 
             go.transform.SetParent(gameDecision.transform);
             go.transform.position = positions[i];
-            go.GetComponent<DecisionPlayerTarget>().SetHead(PlayerDatabase.instance.GetSprite(players[i]));
+            go.GetComponent<DecisionPlayerTarget>().SetVisual(
+                PlayerDatabase.instance.GetSprite(players[i]),
+                PlayerDatabase.instance.GetChestSprite(players[i]),
+                players[i],
+                PlayerDatabase.instance.GetColor(players[i])
+                );
             go.GetComponent<DecisionPlayerTarget>().PlayerName = players[i];
             playerObjects.Add(go);
             GameObject marker = PlayerDatabase.instance.GetPlayer(players[i]).transform.Find("DecisionMarker").gameObject;
@@ -68,17 +75,20 @@ public class GameDecisionController : MonoBehaviour
         GameObject playerGameObject = PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).gameObject;
 
         //playerGameObject.transform.Find("DecisionMarker").gameObject.SetActive(true);
-        playerGameObject.GetComponent<PlayerMarker>().isDecisionRunning = true;
+        //playerGameObject.GetComponent<PlayerMarker>().isDecisionRunning = true;
+        playerGameObject.GetComponent<PlayerMarker>().StartDecision();
 
-        
+        IsPlaying = true;
     }
 
     public void StopPhase()
     {
+        IsPlaying = false;
         GameObject playerGameObject = PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).gameObject;
 
-        playerGameObject.transform.Find("DecisionMarker").gameObject.SetActive(false);
-        playerGameObject.GetComponent<PlayerMarker>().isDecisionRunning = false;
+        //playerGameObject.transform.Find("DecisionMarker").gameObject.SetActive(false);
+        //playerGameObject.GetComponent<PlayerMarker>().isDecisionRunning = false;
+        playerGameObject.GetComponent<PlayerMarker>().StopDecision();
 
         playerObjects.RemoveAll(go => {
             Destroy(go);

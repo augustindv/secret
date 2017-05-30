@@ -8,6 +8,7 @@ public class DecisionBankController : MonoBehaviour {
     public GameObject uiDecisionBank;
     public Text playerMoney;
     public Text extraMoney;
+    public Button grabMoneyButton;
 
     public static DecisionBankController instance
     {
@@ -29,15 +30,19 @@ public class DecisionBankController : MonoBehaviour {
 
     private void Start()
     {
-        uiDecisionBank.transform.FindChild("GrabMoney").GetComponent<Button>().onClick.AddListener(delegate {
+        grabMoneyButton.onClick.AddListener(delegate {
             GrabMoney();
+            grabMoneyButton.interactable = false;
         });
     }
 
     public void StartPhase ()
     {
         // TODO anim in
+        AnimationController.instance.PlayBankAnimation();
         uiDecisionBank.SetActive(true);
+        grabMoneyButton.interactable = true;
+        AudioController.instance.PlayLocalFx("DecisionBank");
     }
 
     public void GrabMoney()
@@ -46,33 +51,39 @@ public class DecisionBankController : MonoBehaviour {
         int extra = PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).playerMoneyExtra;
 
         // TODO anim out
-        playerMoney.text = "MONEY " + money;
-        extraMoney.text = "EXTRA MONEY " + extra;
+        //playerMoney.text = "MONEY " + money;
+        //extraMoney.text = extra + "";
 
         MoneyController.instance.MoneyHasChanged(money);
 
         // notify sequencer
-        PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).CmdIsReadyForNextPhase(true);
+        //PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).CmdIsReadyForNextPhase(true);
+        StartCoroutine(AnimationController.instance.StopCurrentAnimationMainOutPhase(false, true));
+        //uiDecisionBank.SetActive(false);
     }
 
-    // Update is called once per frame
     public void StopPhase()
-    {   
+    {
         // TODO anim out
-        uiDecisionBank.SetActive(false);
+        AnimationController.instance.StopWaitingAnimation();
+    }
+
+    public void SetExtraMoneyText(int money)
+    {
+        extraMoney.text = money + "";
     }
 
     // TODO use sync var hook + event
     void Update()
     {
-        if(PlayerDatabase.instance.PlayerName != null)
+        /*if(PlayerDatabase.instance.PlayerName != null)
         {
             if(playerMoney.text != "MONEY " + PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).playerMoney)
             {
                 playerMoney.text = "MONEY " + PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).playerMoney;
-                extraMoney.text = "EXTRA MONEY " + PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).playerMoneyExtra;
+                extraMoney.text = PlayerDatabase.instance.GetPlayer(PlayerDatabase.instance.PlayerName).playerMoneyExtra + "";
             }
-        }
+        }*/
 
     }
 }

@@ -36,7 +36,14 @@ public class DecisionBankTarget : NetworkBehaviour {
         string name = PlayerDatabase.instance.GetName(collision.transform.parent.GetComponent<NetworkIdentity>().netId);
         bool isLocalPlayer = name == PlayerDatabase.instance.PlayerName ? true : false;
         Count = Count + (isEnter ? 1 : -1);
-        collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().TargetIsBank = isEnter;
+        // TODO dirty fix
+        //if(isEnter)
+        {
+            collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().TargetIsBank = isEnter;
+            // collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().Target = "none";
+            Debug.Log("Decision bank: " + isEnter + " none ");
+        }
+
         if (isLocalPlayer)
         {
             if(isEnter)
@@ -55,11 +62,13 @@ public class DecisionBankTarget : NetworkBehaviour {
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        HandleEvent(collision, true);
+        if (GameDecisionController.instance.IsPlaying)
+            HandleEvent(collision, true);
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        HandleEvent(collision, false);
+        if( GameDecisionController.instance.IsPlaying)
+            HandleEvent(collision, false);
     }
 }

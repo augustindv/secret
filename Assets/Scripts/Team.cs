@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class Team : NetworkBehaviour
 {
-
+    [SyncVar]
     public string teamName;
     public List<Player> players;
     [SyncVar]

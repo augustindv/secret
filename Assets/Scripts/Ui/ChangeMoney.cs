@@ -10,8 +10,8 @@ public class ChangeMoney : MonoBehaviour {
 
 	public void ChangeMoneyInt(int newMoney)
     {
-        money.text = newMoney.ToString();
+        money.text = newMoney + "$";
         if (auctionMoney != null)
-            auctionMoney.text = newMoney.ToString();
+            auctionMoney.text = newMoney + "$";
     }
 }

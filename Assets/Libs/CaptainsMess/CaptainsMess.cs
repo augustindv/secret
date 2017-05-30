@@ -43,6 +43,8 @@ public class CaptainsMess : MonoBehaviour
             networkManager.playerPrefab = playerPrefab.gameObject;
             networkManager.listener = listener;
             networkManager.verboseLogging = verboseLogging;
+            networkManager.connectionConfig.NetworkDropThreshold = 50;
+            Debug.LogWarning("Drop Threshold " + networkManager.connectionConfig.NetworkDropThreshold);
 
             // Optionally create Debug GUI
             if (useDebugGUI) {

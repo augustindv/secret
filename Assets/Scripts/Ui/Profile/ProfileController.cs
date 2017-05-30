@@ -47,6 +47,7 @@ public class ProfileController : MonoBehaviour {
             GameObject textSecret = mySecret.transform.FindChild("TextSecret").gameObject;
             GameObject image = mySecret.transform.FindChild("Image").gameObject;
             GameObject secretBorder = mySecret.transform.FindChild("SecretBorder").gameObject;
+            GameObject sharedImage = mySecret.transform.FindChild("Shared").gameObject;
 
             NetworkInstanceId id = secrets[i].netID;
             Secret secret = null;
@@ -61,7 +62,7 @@ public class ProfileController : MonoBehaviour {
 
             if (secret != null)
             {
-                mySecret.gameObject.GetComponent<Button>().onClick.AddListener(delegate { OpenSecretPopup(p.playerName, secret.secretTextProfile, secret.secretID); });
+                mySecret.gameObject.GetComponent<Button>().onClick.AddListener(delegate { OpenSecretPopup(p.playerName, secret.secretTextProfile, secret.secretID, secret.shared); });
                 textSecret.GetComponent<Text>().text = secret.secretTextProfile;
 
                 GameObject color = image.transform.FindChild("Color").gameObject;
@@ -84,6 +85,14 @@ public class ProfileController : MonoBehaviour {
                 holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(p.playerName);
 
                 secretBorder.GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(p);
+                if (secret.shared)
+                {
+                    sharedImage.SetActive(true);
+                    sharedImage.GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(p);
+                } else
+                {
+                    sharedImage.SetActive(false);
+                }
 
                 mySecret.transform.FindChild("SecretNumber").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(p);
                 mySecret.transform.FindChild("SecretNumber").FindChild("Text").GetComponent<Text>().text = (i+1) + "";
@@ -101,25 +110,32 @@ public class ProfileController : MonoBehaviour {
         myTeam.transform.FindChild("Chest").GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 
-    public void OpenSecretPopup(string playerNameTarget, string secretText, int imageID)
+    public void OpenSecretPopup(string playerNameTarget, string secretText, int imageID, bool shared)
     {
         Texture2D texture = Resources.Load("Secrets/Icons/icon-" + imageID) as Texture2D;
         Transform secretIcon = secretPopup.transform.FindChild("SecretIcon");
+        GameObject sharedText = secretPopup.transform.FindChild("Shared").gameObject;
+        if (!shared)
+        {
+            sharedText.SetActive(false);
+        } else
+        {
+            sharedText.SetActive(true);
+        }
 
         GameObject color = secretIcon.FindChild("Color").gameObject;
         GameObject icon = secretIcon.FindChild("Icon").gameObject;
         GameObject chest = secretIcon.FindChild("Chest").gameObject;
         GameObject holder = secretIcon.FindChild("Holder").gameObject;
 
-        Player p = PlayerDatabase.instance.GetPlayer(playerNameTarget);
         icon.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        texture = PlayerDatabase.instance.GetColorTexture(p.playerName);
+        texture = PlayerDatabase.instance.GetColorTexture(playerNameTarget);
         color.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        texture = PlayerDatabase.instance.GetChestTexture(p.playerName);
+        texture = PlayerDatabase.instance.GetChestTexture(playerNameTarget);
         chest.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(p.playerName);
+        holder.GetComponent<Image>().sprite = PlayerDatabase.instance.GetSprite(playerNameTarget);
 
-        secretPopup.transform.FindChild("SecretText").GetComponent<Text>().text = playerNameTarget + " " + secretText;
+        secretPopup.transform.FindChild("SecretText").GetComponent<Text>().text = secretText;
         secretPopup.transform.FindChild("CloseButton").GetComponent<Button>().onClick.RemoveAllListeners();
         secretPopup.transform.FindChild("CloseButton").GetComponent<Button>().onClick.AddListener(delegate { secretPopup.SetActive(false); });
         secretPopup.transform.FindChild("PopUpBorder").GetComponent<Image>().color = PlayerDatabase.instance.GetPlayerDeckColor(UiMainController.instance.localPlayer);

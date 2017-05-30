@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class DecisionEvent : UnityEvent<string, bool, bool>
@@ -22,22 +23,27 @@ public class DecisionPlayerTarget : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
 	}
 
 	// Update is called once per frame
 	void Update () {
-		
-	}
+    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        string name = PlayerDatabase.instance.GetName(collision.transform.parent.GetComponent<NetworkIdentity>().netId);
-        bool isLocalPlayer = name == PlayerDatabase.instance.PlayerName ? true : false;
-        onDecisionEvent.Invoke(name, true, isLocalPlayer);
-        decisionEventEmitterEnter.Invoke(0);
-        if (isLocalPlayer)
-            collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().Target = name;
+        string otherPlayerName = PlayerDatabase.instance.GetName(other.transform.parent.GetComponent<NetworkIdentity>().netId);
+        bool isLocalPlayer = otherPlayerName == PlayerDatabase.instance.PlayerName ? true : false;
+        onDecisionEvent.Invoke(otherPlayerName, true, isLocalPlayer);
+        if(isLocalPlayer)
+            decisionEventEmitterEnter.Invoke(0);
+        if (isLocalPlayer && GameDecisionController.instance.IsPlaying)
+        {
+            // TODO dirty fix
+            Debug.Log("Decision bank: false " + PlayerName);
+            other.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().TargetIsBank = false;
+            other.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().Target = PlayerName;
+        }
+  
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -45,13 +51,22 @@ public class DecisionPlayerTarget : MonoBehaviour {
         string name = PlayerDatabase.instance.GetName(collision.transform.parent.GetComponent<NetworkIdentity>().netId);
         bool isLocalPlayer = name == PlayerDatabase.instance.PlayerName ? true : false;
         onDecisionEvent.Invoke(name, false, isLocalPlayer);
-        decisionEventEmitterExit.Invoke(1);
         if (isLocalPlayer)
-            collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().Target = "none";
+            decisionEventEmitterExit.Invoke(1);
+        if (isLocalPlayer && GameDecisionController.instance.IsPlaying)
+        {
+            // TODO dirty fix
+            Debug.Log("Decision not applied bank:" +
+                collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().TargetIsBank + " none");
+            // collision.gameObject.transform.parent.gameObject.GetComponent<PlayerMarker>().Target = "none";
+        }
     }
 
-    public void SetHead(Sprite sprite)
+    public void SetVisual(Sprite sprite, Sprite body, string name, Color color)
     {
         transform.FindChild("Head").gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
+        transform.FindChild("Body").gameObject.GetComponent<SpriteRenderer>().sprite = body;
+        transform.FindChild("Name").gameObject.GetComponent<TextMesh>().text = name;
+        transform.FindChild("Circle").gameObject.GetComponent<SpriteRenderer>().color = color;
     }
 }

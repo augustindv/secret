@@ -5,18 +5,17 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class InventoryAddSecretUnityEvent : UnityEvent<string, string, string, bool>
+public class InventoryAddSecretUnityEvent : UnityEvent<string, string, string, string>
 {
 }
 
 public class InventoryController : MonoBehaviour {
 
-    public static string FOUND_EMPTY = "<b>Vous n'avez récupéré aucun secret.</b>\nUne phase de recherche va être lancée où vous pourrez remplir votre inventaire avec les secrets des autres joueurs ou bien prendre de l'argent à la banque.";
-    public static string REVEALED_EMPTY = "<b>Aucun secret n'a été révélé au grand jour.</b>\nVous pourrez révéler au grand jour des secrets de votre inventaire durant les phases de publication et d'enchères.";
-
+    public static string FOUND_EMPTY = "Vous n'avez récupéré aucun secret\npour le moment...";
+    public static string REVEALED_EMPTY = "Aucun secret n'a été révélé\nau grand jour !";
     public InventoryAddSecretUnityEvent onInventoryUpdate;
 
-    public delegate void InventoryUpdate(string playerNameTarget, string secretText, string imageCardID, bool newLine);
+    public delegate void InventoryUpdate(string playerNameTarget, string secretText, string imageCardID, string publishedAndShared);
     public event InventoryUpdate InventoryUpdated;
 
     public static InventoryController inventoryController;
@@ -66,7 +65,7 @@ public class InventoryController : MonoBehaviour {
 
     public void EmptyInventory()
     {
-        if (secretsFound.transform.childCount == 2)
+        if (secretsFound.transform.childCount == 2 && !secretsFound.transform.FindChild("InventorySecretsEmpty"))
         {
             GameObject empty = Instantiate(secretsEmpty, secretsFound.transform);
             empty.gameObject.name = "InventorySecretsEmpty";
@@ -85,23 +84,37 @@ public class InventoryController : MonoBehaviour {
         readyButtonAuction.image.overrideSprite = readySprite;
     }
 
-    public void UpdateInventory(Secret secret, string playerNameTarget, bool newLine, int cardID)
+    public void UpdateInventory(Secret secret, string playerNameTarget, bool published, int cardID, bool shared)
     {
+        string publishedTmp = published ? "1" : "0";
+        string sharedTmp = shared ? "1" : "0";
 
         if (InventoryUpdated != null)
-            InventoryUpdated(playerNameTarget, secret.secretTextCommon, secret.secretID + "," + cardID, newLine);
+            InventoryUpdated(playerNameTarget, secret.secretTextCommon, secret.secretID + "," + cardID, publishedTmp + "," + sharedTmp);
 
-        onInventoryUpdate.Invoke(playerNameTarget, secret.secretTextCommon, secret.secretID + "," + cardID, newLine);
+        onInventoryUpdate.Invoke(playerNameTarget, secret.secretTextCommon, secret.secretID + "," + cardID, publishedTmp + "," + sharedTmp);
     }
 
-    public void OpenSecretPopup(string playerNameTarget, string secretText, int imageID)
+    public void OpenSecretPopup(string playerNameTarget, string secretText, int imageID, bool shared)
     {
         Texture2D texture = Resources.Load("Secrets/Icons/icon-" + imageID) as Texture2D;
         Transform secretIcon = secretPopup.transform.FindChild("SecretIcon");
+
+        GameObject sharedText = secretPopup.transform.FindChild("Shared").gameObject;
+        if (!shared)
+        {
+            sharedText.SetActive(false);
+        }
+        else
+        {
+            sharedText.SetActive(true);
+        }
+
         GameObject color = secretIcon.FindChild("Color").gameObject;
         GameObject icon = secretIcon.FindChild("Icon").gameObject;
         GameObject chest = secretIcon.FindChild("Chest").gameObject;
         GameObject holder = secretIcon.FindChild("Holder").gameObject;
+
         Player p = PlayerDatabase.instance.GetPlayer(playerNameTarget);
         icon.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         texture = Resources.Load("Secrets/Colors/color-" + PlayerDatabase.instance.GetPlayerDeckID(p)) as Texture2D;
@@ -122,6 +135,7 @@ public class InventoryController : MonoBehaviour {
         {
             readyButtonAuction.image.overrideSprite = notReadySprite;
             UiMainController.instance.localPlayer.CmdIsReadyForNextPhase(true);
+            //UiMainController.instance.localPlayer.CmdStopTimer();
         }
         else
         {

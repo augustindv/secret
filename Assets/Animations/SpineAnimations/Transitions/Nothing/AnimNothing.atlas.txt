@@ -1,0 +1,202 @@
+
+AnimNothing.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bas  nuage
+  rotate: false
+  xy: 2, 402
+  size: 286, 166
+  orig: 286, 166
+  offset: 0, 0
+  index: -1
+bas croix
+  rotate: false
+  xy: 203, 183
+  size: 43, 38
+  orig: 43, 38
+  offset: 0, 0
+  index: -1
+bas eclair
+  rotate: false
+  xy: 904, 690
+  size: 27, 50
+  orig: 27, 50
+  offset: 0, 0
+  index: -1
+bas larme 1
+  rotate: false
+  xy: 498, 597
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: -1
+bas larme 3
+  rotate: false
+  xy: 498, 597
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: -1
+bas larme 2
+  rotate: false
+  xy: 942, 915
+  size: 29, 44
+  orig: 29, 44
+  offset: 0, 0
+  index: -1
+bas masque
+  rotate: false
+  xy: 453, 623
+  size: 154, 228
+  orig: 154, 228
+  offset: 0, 0
+  index: -1
+bas menton
+  rotate: false
+  xy: 942, 961
+  size: 79, 58
+  orig: 79, 58
+  offset: 0, 0
+  index: -1
+bas pluie 1
+  rotate: false
+  xy: 258, 327
+  size: 13, 21
+  orig: 13, 21
+  offset: 0, 0
+  index: -1
+bas pluie 2
+  rotate: false
+  xy: 430, 403
+  size: 19, 43
+  orig: 19, 43
+  offset: 0, 0
+  index: -1
+bas pouce 1
+  rotate: false
+  xy: 741, 860
+  size: 199, 159
+  orig: 199, 159
+  offset: 0, 0
+  index: -1
+bas pouce 2
+  rotate: false
+  xy: 765, 642
+  size: 137, 98
+  orig: 137, 98
+  offset: 0, 0
+  index: -1
+bas pouce 3
+  rotate: false
+  xy: 290, 448
+  size: 166, 120
+  orig: 166, 120
+  offset: 0, 0
+  index: -1
+fond-vagues
+  rotate: false
+  xy: 2, 570
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+haut criox
+  rotate: false
+  xy: 453, 583
+  size: 43, 38
+  orig: 43, 38
+  offset: 0, 0
+  index: -1
+haut eclair
+  rotate: false
+  xy: 258, 350
+  size: 27, 50
+  orig: 27, 50
+  offset: 0, 0
+  index: -1
+haut larme 1
+  rotate: false
+  xy: 904, 664
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: -1
+haut larme 3
+  rotate: false
+  xy: 904, 664
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: -1
+haut larme 2
+  rotate: false
+  xy: 83, 16
+  size: 29, 44
+  orig: 29, 44
+  offset: 0, 0
+  index: -1
+haut masque
+  rotate: false
+  xy: 609, 623
+  size: 154, 228
+  orig: 154, 228
+  offset: 0, 0
+  index: -1
+haut menton
+  rotate: false
+  xy: 2, 2
+  size: 79, 58
+  orig: 79, 58
+  offset: 0, 0
+  index: -1
+haut nuage
+  rotate: false
+  xy: 453, 853
+  size: 286, 166
+  orig: 286, 166
+  offset: 0, 0
+  index: -1
+haut panneau
+  rotate: false
+  xy: 2, 223
+  size: 254, 177
+  orig: 254, 177
+  offset: 0, 0
+  index: -1
+haut pluie 1
+  rotate: false
+  xy: 942, 892
+  size: 13, 21
+  orig: 13, 21
+  offset: 0, 0
+  index: -1
+haut pluie 2
+  rotate: false
+  xy: 203, 138
+  size: 19, 43
+  orig: 19, 43
+  offset: 0, 0
+  index: -1
+haut pouce 1
+  rotate: false
+  xy: 2, 62
+  size: 199, 159
+  orig: 199, 159
+  offset: 0, 0
+  index: -1
+haut pouce 2
+  rotate: false
+  xy: 290, 349
+  size: 138, 97
+  orig: 138, 97
+  offset: 0, 0
+  index: -1
+haut pouce 3
+  rotate: false
+  xy: 765, 742
+  size: 172, 116
+  orig: 172, 116
+  offset: 0, 0
+  index: -1

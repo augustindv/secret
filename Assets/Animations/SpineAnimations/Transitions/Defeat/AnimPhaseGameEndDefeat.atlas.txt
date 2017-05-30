@@ -5,274 +5,260 @@ format: RGBA8888
 filter: Linear,Linear
 repeat: none
 !
-  rotate: true
-  xy: 185, 53
+  rotate: false
+  xy: 709, 789
   size: 15, 63
   orig: 15, 63
   offset: 0, 0
   index: -1
 D
   rotate: false
-  xy: 971, 878
+  xy: 942, 902
   size: 49, 58
   orig: 49, 58
   offset: 0, 0
   index: -1
 E1
   rotate: false
-  xy: 971, 938
+  xy: 627, 589
   size: 51, 84
   orig: 51, 84
   offset: 0, 0
   index: -1
 E2
   rotate: false
-  xy: 888, 807
+  xy: 129, 2
   size: 42, 59
   orig: 42, 59
   offset: 0, 0
   index: -1
 a
   rotate: false
-  xy: 627, 616
+  xy: 343, 158
   size: 54, 59
   orig: 54, 59
   offset: 0, 0
   index: -1
 bas  nuage
   rotate: false
-  xy: 2, 405
+  xy: 2, 403
   size: 286, 166
   orig: 286, 166
   offset: 0, 0
   index: -1
 bas croix
   rotate: false
-  xy: 532, 397
+  xy: 203, 80
   size: 43, 38
   orig: 43, 38
   offset: 0, 0
   index: -1
 bas eclair
-  rotate: true
-  xy: 2, 2
+  rotate: false
+  xy: 258, 351
   size: 27, 50
   orig: 27, 50
   offset: 0, 0
   index: -1
 bas larme 1
   rotate: false
-  xy: 258, 379
+  xy: 627, 563
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: -1
 bas larme 3
   rotate: false
-  xy: 258, 379
+  xy: 627, 563
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: -1
 bas larme 2
   rotate: false
-  xy: 627, 570
+  xy: 993, 916
   size: 29, 44
   orig: 29, 44
   offset: 0, 0
   index: -1
 bas masque
-  rotate: true
-  xy: 741, 868
+  rotate: false
+  xy: 290, 341
   size: 154, 228
   orig: 154, 228
   offset: 0, 0
   index: -1
 bas menton
   rotate: false
-  xy: 451, 377
+  xy: 942, 962
   size: 79, 58
   orig: 79, 58
   offset: 0, 0
   index: -1
 bas panneau
   rotate: false
-  xy: 2, 226
+  xy: 2, 224
   size: 254, 177
   orig: 254, 177
   offset: 0, 0
   index: -1
 bas pluie 1
-  rotate: true
-  xy: 232, 211
+  rotate: false
+  xy: 565, 243
   size: 13, 21
   orig: 13, 21
   offset: 0, 0
   index: -1
 bas pluie 2
   rotate: false
-  xy: 683, 632
+  xy: 173, 18
   size: 19, 43
   orig: 19, 43
   offset: 0, 0
   index: -1
 bas pouce 1
-  rotate: true
-  xy: 290, 372
+  rotate: false
+  xy: 741, 861
   size: 199, 159
   orig: 199, 159
   offset: 0, 0
   index: -1
 bas pouce 2
   rotate: false
-  xy: 232, 111
+  xy: 426, 227
   size: 137, 98
   orig: 137, 98
   offset: 0, 0
   index: -1
 bas pouce 3
   rotate: false
-  xy: 451, 437
+  xy: 258, 219
   size: 166, 120
   orig: 166, 120
   offset: 0, 0
   index: -1
 f
-  rotate: true
-  xy: 232, 70
+  rotate: false
+  xy: 565, 266
   size: 39, 59
   orig: 39, 59
   offset: 0, 0
   index: -1
 fond-vagues
   rotate: false
-  xy: 2, 573
+  xy: 2, 571
   size: 449, 449
   orig: 449, 449
   offset: 0, 0
   index: -1
 haut criox
   rotate: false
-  xy: 371, 111
+  xy: 942, 862
   size: 43, 38
   orig: 43, 38
   offset: 0, 0
   index: -1
 haut eclair
-  rotate: true
-  xy: 54, 2
+  rotate: false
+  xy: 680, 623
   size: 27, 50
   orig: 27, 50
   offset: 0, 0
   index: -1
 haut larme 1
   rotate: false
-  xy: 888, 781
+  xy: 343, 132
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: -1
 haut larme 3
   rotate: false
-  xy: 888, 781
+  xy: 343, 132
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: -1
 haut larme 2
-  rotate: true
-  xy: 748, 678
+  rotate: false
+  xy: 993, 870
   size: 29, 44
   orig: 29, 44
   offset: 0, 0
   index: -1
 haut masque
-  rotate: true
-  xy: 2, 70
+  rotate: false
+  xy: 446, 327
   size: 154, 228
   orig: 154, 228
   offset: 0, 0
   index: -1
 haut menton
   rotate: false
-  xy: 371, 151
+  xy: 2, 3
   size: 79, 58
   orig: 79, 58
   offset: 0, 0
   index: -1
 haut nuage
   rotate: false
-  xy: 453, 856
+  xy: 453, 854
   size: 286, 166
   orig: 286, 166
   offset: 0, 0
   index: -1
 haut panneau
   rotate: false
-  xy: 453, 677
+  xy: 453, 675
   size: 254, 177
   orig: 254, 177
   offset: 0, 0
   index: -1
 haut pluie 1
   rotate: false
-  xy: 932, 845
+  xy: 248, 97
   size: 13, 21
   orig: 13, 21
   offset: 0, 0
   index: -1
 haut pluie 2
   rotate: false
-  xy: 794, 724
+  xy: 602, 512
   size: 19, 43
   orig: 19, 43
   offset: 0, 0
   index: -1
 haut pouce 1
   rotate: false
-  xy: 258, 211
+  xy: 2, 63
   size: 199, 159
   orig: 199, 159
   offset: 0, 0
   index: -1
 haut pouce 2
   rotate: false
-  xy: 748, 769
+  xy: 203, 120
   size: 138, 97
   orig: 138, 97
   offset: 0, 0
   index: -1
 haut pouce 3
   rotate: false
-  xy: 453, 559
+  xy: 453, 557
   size: 172, 116
   orig: 172, 116
   offset: 0, 0
   index: -1
 i
-  rotate: true
-  xy: 106, 14
+  rotate: false
+  xy: 399, 160
   size: 15, 57
   orig: 15, 57
   offset: 0, 0
   index: -1
-illumines
-  rotate: false
-  xy: 2, 31
-  size: 181, 37
-  orig: 181, 37
-  offset: 0, 0
-  index: -1
-illumines bas
-  rotate: true
-  xy: 709, 673
-  size: 181, 37
-  orig: 181, 37
-  offset: 0, 0
-  index: -1
 t
   rotate: false
-  xy: 748, 709
+  xy: 83, 3
   size: 44, 58
   orig: 44, 58
   offset: 0, 0

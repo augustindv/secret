@@ -1,0 +1,132 @@
+
+AnimNothingPublished.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+avantbrasgauche
+  rotate: false
+  xy: 932, 376
+  size: 72, 46
+  orig: 72, 46
+  offset: 0, 0
+  index: -1
+bras droit
+  rotate: false
+  xy: 752, 318
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+bras droite
+  rotate: false
+  xy: 906, 332
+  size: 79, 42
+  orig: 79, 42
+  offset: 0, 0
+  index: -1
+bras gauche
+  rotate: false
+  xy: 898, 294
+  size: 64, 36
+  orig: 64, 36
+  offset: 0, 0
+  index: -1
+chapeau
+  rotate: false
+  xy: 752, 390
+  size: 178, 113
+  orig: 178, 113
+  offset: 0, 0
+  index: -1
+corps
+  rotate: false
+  xy: 637, 306
+  size: 113, 197
+  orig: 113, 197
+  offset: 0, 0
+  index: -1
+cou
+  rotate: false
+  xy: 994, 462
+  size: 23, 41
+  orig: 23, 41
+  offset: 0, 0
+  index: -1
+cuisse droite
+  rotate: false
+  xy: 964, 279
+  size: 38, 51
+  orig: 38, 51
+  offset: 0, 0
+  index: -1
+cuisse gauche
+  rotate: false
+  xy: 605, 51
+  size: 39, 53
+  orig: 39, 53
+  offset: 0, 0
+  index: -1
+culotte
+  rotate: false
+  xy: 831, 334
+  size: 73, 54
+  orig: 73, 54
+  offset: 0, 0
+  index: -1
+fond
+  rotate: false
+  xy: 2, 2
+  size: 501, 501
+  orig: 501, 501
+  offset: 0, 0
+  index: -1
+main droite
+  rotate: false
+  xy: 831, 302
+  size: 65, 30
+  orig: 65, 30
+  offset: 0, 0
+  index: -1
+main gauche
+  rotate: false
+  xy: 605, 2
+  size: 50, 47
+  orig: 50, 47
+  offset: 0, 0
+  index: -1
+micro
+  rotate: false
+  xy: 571, 21
+  size: 32, 83
+  orig: 32, 83
+  offset: 0, 0
+  index: -1
+pied droit
+  rotate: false
+  xy: 505, 7
+  size: 64, 97
+  orig: 64, 97
+  offset: 0, 0
+  index: -1
+pied gauche
+  rotate: false
+  xy: 932, 424
+  size: 60, 79
+  orig: 60, 79
+  offset: 0, 0
+  index: -1
+prompteur
+  rotate: false
+  xy: 505, 106
+  size: 125, 188
+  orig: 125, 188
+  offset: 0, 0
+  index: -1
+tete
+  rotate: false
+  xy: 505, 296
+  size: 130, 207
+  orig: 130, 207
+  offset: 0, 0
+  index: -1

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class PlayerMarker : NetworkBehaviour {
     GameObject decisionMarker;
@@ -21,7 +22,7 @@ public class PlayerMarker : NetworkBehaviour {
     }
     [SyncVar]
     public bool targetIsBank;
-
+    private Text targetDbg;
 
 	void Start ()
     {
@@ -55,5 +56,15 @@ public class PlayerMarker : NetworkBehaviour {
     void Update()
     {
         //Debug.Log("target " + Target);
+        /*if (!targetDbg)
+        {
+            if (GameObject.Find("TargetDbg"))
+                targetDbg = GameObject.Find("TargetDbg").GetComponent<Text>();
+        }
+        else
+        {
+            targetDbg.text = TargetIsBank ? "bank" : ((Target == null || Target =="none" ) ? "rien" : Target );
+        }*/
+            
     }
 }

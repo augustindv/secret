@@ -6,280 +6,280 @@ filter: Linear,Linear
 repeat: none
 C
   rotate: false
-  xy: 969, 514
+  xy: 949, 660
   size: 46, 58
   orig: 46, 58
   offset: 0, 0
   index: -1
 E
   rotate: false
-  xy: 109, 2
+  xy: 316, 110
   size: 42, 59
   orig: 42, 59
   offset: 0, 0
   index: -1
 I1
   rotate: false
-  xy: 1005, 962
+  xy: 658, 508
   size: 15, 57
   orig: 15, 57
   offset: 0, 0
   index: -1
 I2
   rotate: false
-  xy: 1005, 962
+  xy: 658, 508
   size: 15, 57
   orig: 15, 57
   offset: 0, 0
   index: -1
 O
   rotate: false
-  xy: 2, 3
+  xy: 620, 258
   size: 57, 58
   orig: 57, 58
   offset: 0, 0
   index: -1
 R
   rotate: false
-  xy: 61, 3
+  xy: 949, 600
   size: 46, 58
   orig: 46, 58
   offset: 0, 0
   index: -1
 T
-  rotate: true
-  xy: 444, 329
+  rotate: false
+  xy: 270, 111
   size: 44, 58
   orig: 44, 58
   offset: 0, 0
   index: -1
 V
   rotate: false
-  xy: 969, 574
+  xy: 949, 720
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 bas blanc 1
   rotate: false
-  xy: 657, 768
+  xy: 206, 313
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: -1
 bas blanc 2
   rotate: false
-  xy: 153, 48
+  xy: 406, 156
   size: 12, 13
   orig: 12, 13
   offset: 0, 0
   index: -1
 bas blanc 3
   rotate: false
-  xy: 167, 66
+  xy: 657, 764
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: -1
 bas blanc 4
   rotate: false
-  xy: 977, 753
+  xy: 517, 185
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 bas blanc 5
   rotate: false
-  xy: 639, 547
+  xy: 675, 551
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 bas bouche 1
   rotate: false
-  xy: 444, 375
+  xy: 906, 781
   size: 91, 90
   orig: 91, 90
   offset: 0, 0
   index: -1
 bas bouche 2
   rotate: false
-  xy: 906, 777
+  xy: 517, 209
   size: 101, 100
   orig: 101, 100
   offset: 0, 0
   index: -1
 bas cadre
-  rotate: true
-  xy: 2, 63
+  rotate: false
+  xy: 2, 116
   size: 220, 163
   orig: 220, 163
   offset: 0, 0
   index: -1
 bas coupe
   rotate: false
-  xy: 2, 285
+  xy: 2, 281
   size: 202, 283
   orig: 202, 283
   offset: 0, 0
   index: -1
 bas eclairs blanc
   rotate: false
-  xy: 461, 276
+  xy: 224, 118
   size: 44, 51
   orig: 44, 51
   offset: 0, 0
   index: -1
 bas images
   rotate: false
-  xy: 675, 626
+  xy: 455, 410
   size: 201, 155
   orig: 201, 155
   offset: 0, 0
   index: -1
 bas laurier
-  rotate: true
-  xy: 206, 321
+  rotate: false
+  xy: 657, 779
   size: 247, 236
   orig: 247, 236
   offset: 0, 0
   index: -1
 bas mains 1
-  rotate: true
-  xy: 906, 879
+  rotate: false
+  xy: 2, 17
   size: 140, 97
   orig: 140, 97
   offset: 0, 0
   index: -1
 bas mains 2
-  rotate: true
-  xy: 675, 489
+  rotate: false
+  xy: 675, 575
   size: 135, 202
   orig: 135, 202
   offset: 0, 0
   index: -1
 bas mains 3
   rotate: false
-  xy: 879, 491
+  xy: 906, 873
   size: 88, 142
   orig: 88, 142
   offset: 0, 0
   index: -1
 excl
-  rotate: true
-  xy: 206, 304
+  rotate: false
+  xy: 996, 952
   size: 15, 63
   orig: 15, 63
   offset: 0, 0
   index: -1
 fond-vagues
   rotate: false
-  xy: 2, 570
+  xy: 2, 566
   size: 449, 449
   orig: 449, 449
   offset: 0, 0
   index: -1
 haut blanc 3
   rotate: false
-  xy: 206, 289
+  xy: 2, 2
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: -1
 haut blanc 4
   rotate: false
-  xy: 504, 351
+  xy: 620, 234
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 haut blanc 5
   rotate: false
-  xy: 461, 199
+  xy: 949, 576
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 haut blanc1
   rotate: false
-  xy: 969, 499
+  xy: 427, 313
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: -1
 haut blanc2
   rotate: false
-  xy: 271, 306
+  xy: 996, 937
   size: 12, 13
   orig: 12, 13
   offset: 0, 0
   index: -1
 haut bouche 1
   rotate: false
-  xy: 546, 479
+  xy: 597, 318
   size: 91, 90
   orig: 91, 90
   offset: 0, 0
   index: -1
 haut bouche 2
-  rotate: true
-  xy: 444, 467
+  rotate: false
+  xy: 144, 14
   size: 101, 100
   orig: 101, 100
   offset: 0, 0
   index: -1
 haut cadre
   rotate: false
-  xy: 453, 571
+  xy: 453, 567
   size: 220, 163
   orig: 220, 163
   offset: 0, 0
   index: -1
 haut coupe
   rotate: false
-  xy: 453, 736
+  xy: 453, 732
   size: 202, 283
   orig: 202, 283
   offset: 0, 0
   index: -1
 haut eclair blanc
   rotate: false
-  xy: 461, 223
+  xy: 360, 118
   size: 44, 51
   orig: 44, 51
   offset: 0, 0
   index: -1
 haut images
-  rotate: true
-  xy: 304, 118
+  rotate: false
+  xy: 224, 171
   size: 201, 155
   orig: 201, 155
   offset: 0, 0
   index: -1
 haut lauriers
   rotate: false
-  xy: 657, 783
+  xy: 206, 328
   size: 247, 236
   orig: 247, 236
   offset: 0, 0
   index: -1
 haut main 2
   rotate: false
-  xy: 167, 81
+  xy: 812, 575
   size: 135, 202
   orig: 135, 202
   offset: 0, 0
   index: -1
 haut mains 1
-  rotate: true
-  xy: 878, 635
+  rotate: false
+  xy: 455, 311
   size: 140, 97
   orig: 140, 97
   offset: 0, 0
   index: -1
 haut mains 3
-  rotate: true
-  xy: 304, 28
+  rotate: false
+  xy: 427, 167
   size: 88, 142
   orig: 88, 142
   offset: 0, 0

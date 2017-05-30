@@ -12,6 +12,15 @@ public class MessageSend : MonoBehaviour {
     // Update is called once per frame
     public void Send()
     {
-        MessageController.instance.Send(MessageController.instance.PlayerName, dst.options[dst.value].text, message.text, false);
+        if(message.text != "")
+        {
+            MessageController.instance.Send(MessageController.instance.PlayerName, dst.options[dst.value].text, message.text, false);
+            message.text = "";
+        }
+    }
+
+    public void Start()
+    {
+        //message.onEndEdit.AddListener(delegate { Send(); });
     }
 }

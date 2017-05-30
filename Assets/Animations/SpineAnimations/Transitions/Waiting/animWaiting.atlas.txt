@@ -1,0 +1,132 @@
+
+animWaiting.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+clock
+  rotate: false
+  xy: 453, 398
+  size: 217, 228
+  orig: 217, 228
+  offset: 0, 0
+  index: -1
+clock copie
+  rotate: false
+  xy: 2, 52
+  size: 230, 253
+  orig: 230, 253
+  offset: 0, 0
+  index: -1
+clock copie 2
+  rotate: false
+  xy: 672, 398
+  size: 217, 228
+  orig: 217, 228
+  offset: 0, 0
+  index: -1
+clock copie 3
+  rotate: false
+  xy: 234, 52
+  size: 229, 253
+  orig: 229, 253
+  offset: 0, 0
+  index: -1
+fond-vagues copie
+  rotate: false
+  xy: 2, 564
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+hour
+  rotate: false
+  xy: 104, 33
+  size: 41, 17
+  orig: 41, 17
+  offset: 0, 0
+  index: -1
+hour copie
+  rotate: false
+  xy: 931, 923
+  size: 23, 40
+  orig: 23, 40
+  offset: 0, 0
+  index: -1
+hour copie 2
+  rotate: false
+  xy: 43, 5
+  size: 41, 17
+  orig: 41, 17
+  offset: 0, 0
+  index: -1
+hour copie 3
+  rotate: false
+  xy: 972, 973
+  size: 23, 40
+  orig: 23, 40
+  offset: 0, 0
+  index: -1
+metronome
+  rotate: false
+  xy: 453, 628
+  size: 237, 385
+  orig: 237, 385
+  offset: 0, 0
+  index: -1
+metronome copie
+  rotate: false
+  xy: 692, 628
+  size: 237, 385
+  orig: 237, 385
+  offset: 0, 0
+  index: -1
+metronome-baton
+  rotate: false
+  xy: 891, 478
+  size: 103, 148
+  orig: 103, 148
+  offset: 0, 0
+  index: -1
+metronome-baton copie
+  rotate: false
+  xy: 891, 328
+  size: 103, 148
+  orig: 103, 148
+  offset: 0, 0
+  index: -1
+minute
+  rotate: false
+  xy: 2, 2
+  size: 39, 48
+  orig: 39, 48
+  offset: 0, 0
+  index: -1
+minute copie
+  rotate: false
+  xy: 43, 38
+  size: 59, 12
+  orig: 59, 12
+  offset: 0, 0
+  index: -1
+minute copie 2
+  rotate: false
+  xy: 931, 965
+  size: 39, 48
+  orig: 39, 48
+  offset: 0, 0
+  index: -1
+minute copie 3
+  rotate: false
+  xy: 43, 24
+  size: 59, 12
+  orig: 59, 12
+  offset: 0, 0
+  index: -1
+sablier
+  rotate: false
+  xy: 2, 307
+  size: 440, 255
+  orig: 440, 255
+  offset: 0, 0
+  index: -1

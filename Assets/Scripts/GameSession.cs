@@ -103,6 +103,11 @@ public class GameSession : NetworkBehaviour
     [Server]
     public void CreateTeams()
     {
+        TextAsset data = Resources.Load("Teams/Teams") as TextAsset;
+        string[] lines = data.text.Split('\n');
+        List<string> linesList = lines.ToList<string>();
+        linesList.Shuffle();
+
         for (int i = 0; i < teams.Count; i++)
         {
             teams[i] = Instantiate(teams[i]);
@@ -110,6 +115,8 @@ public class GameSession : NetworkBehaviour
         foreach (GameObject team in teams)
         {
             NetworkServer.Spawn(team);
+            team.GetComponent<Team>().teamName = linesList[0];
+            linesList.RemoveAt(0);
         }
         teams.Shuffle();
 
@@ -123,6 +130,8 @@ public class GameSession : NetworkBehaviour
         for (int i = 1; i <= NUMBER_TEAMS; i++)
         {
             Team team = teams[i - 1].GetComponent<Team>();
+            if (numberOfPlayers < 5)
+                team.hp = 4;
             List<Player> listTeam = tmpPlayers.Take(numberOfPlayersByTeam).ToList<Player>();
             if (i == NUMBER_TEAMS)
             {
@@ -199,7 +208,7 @@ public class GameSession : NetworkBehaviour
                     }
                     deck.Remove(secret.gameObject);
                 }
-                int tmp = secretCount - numberOfSharedSecrets;
+                int tmp = t.players.Count == 1 ? secretCount - 1 : secretCount - Mathf.Min(2, t.players.Count) * numberOfSharedSecrets; // ahem
                 for (int j = 0; j < tmp; j++)
                 {
                     Secret secret = deck[0].GetComponent<Secret>();
@@ -225,7 +234,13 @@ public class GameSession : NetworkBehaviour
                 string secretsDump = "";
                 for (int i = 0; i < p.secrets.Count; i++)
                 {
-                    secretsDump += "[" + p.secrets[i].netID + "]";
+                    secretsDump += "[" + p.secrets[i].netID + "]\n";
+                    //secretsDump += " > " + NetworkServer.FindLocalObject(p.secrets[i].netID).GetComponent<Secret>().secretTextCommon + "\n";
+                }
+                for (int i = 0; i < p.secrets.Count; i++)
+                {
+                    //secretsDump += "[" + p.secrets[i].netID + "]";
+                    secretsDump += "> " + NetworkServer.FindLocalObject(p.secrets[i].netID).GetComponent<Secret>().secretTextCommon + "\n";
                 }
                 Debug.Log("Player " + p.playerName + " => " + secretsDump);
             }

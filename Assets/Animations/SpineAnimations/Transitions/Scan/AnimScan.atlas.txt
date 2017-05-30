@@ -1,0 +1,125 @@
+
+AnimScan.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+A
+  rotate: false
+  xy: 103, 4
+  size: 54, 59
+  orig: 54, 59
+  offset: 0, 0
+  index: -1
+C
+  rotate: false
+  xy: 512, 511
+  size: 46, 58
+  orig: 46, 58
+  offset: 0, 0
+  index: -1
+E
+  rotate: false
+  xy: 512, 449
+  size: 42, 60
+  orig: 42, 60
+  offset: 0, 0
+  index: -1
+N
+  rotate: false
+  xy: 2, 2
+  size: 49, 61
+  orig: 49, 61
+  offset: 0, 0
+  index: -1
+S
+  rotate: false
+  xy: 159, 5
+  size: 44, 58
+  orig: 44, 58
+  offset: 0, 0
+  index: -1
+Z
+  rotate: false
+  xy: 53, 2
+  size: 48, 61
+  orig: 48, 61
+  offset: 0, 0
+  index: -1
+appareil
+  rotate: false
+  xy: 453, 571
+  size: 256, 173
+  orig: 256, 173
+  offset: 0, 0
+  index: -1
+appareil copie
+  rotate: false
+  xy: 711, 619
+  size: 256, 173
+  orig: 256, 173
+  offset: 0, 0
+  index: -1
+fond-vagues
+  rotate: false
+  xy: 2, 573
+  size: 449, 449
+  orig: 449, 449
+  offset: 0, 0
+  index: -1
+loupe
+  rotate: false
+  xy: 2, 295
+  size: 251, 276
+  orig: 251, 276
+  offset: 0, 0
+  index: -1
+loupe copie
+  rotate: false
+  xy: 706, 794
+  size: 294, 228
+  orig: 294, 228
+  offset: 0, 0
+  index: -1
+loupe copie 2
+  rotate: false
+  xy: 453, 746
+  size: 251, 276
+  orig: 251, 276
+  offset: 0, 0
+  index: -1
+loupe copie 3
+  rotate: false
+  xy: 2, 65
+  size: 294, 228
+  orig: 294, 228
+  offset: 0, 0
+  index: -1
+oeil
+  rotate: false
+  xy: 419, 479
+  size: 91, 90
+  orig: 91, 90
+  offset: 0, 0
+  index: -1
+oeil copie
+  rotate: false
+  xy: 419, 387
+  size: 91, 90
+  orig: 91, 90
+  offset: 0, 0
+  index: -1
+photo
+  rotate: false
+  xy: 255, 457
+  size: 162, 114
+  orig: 162, 114
+  offset: 0, 0
+  index: -1
+photo copie
+  rotate: false
+  xy: 255, 341
+  size: 162, 114
+  orig: 162, 114
+  offset: 0, 0
+  index: -1
