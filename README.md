@@ -13,3 +13,5 @@ Corrado Longoni - Developer/Sound Design
 Maxime Neveu - Art Direction
 
 Manon Tardif - Art Direction
+
+Yasmina Azeri - Project Management
